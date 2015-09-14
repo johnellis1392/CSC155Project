@@ -4,8 +4,18 @@ package com.celestia
 import javax.swing.JFrame 
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLAutoDrawable 
+import com.jogamp.opengl.GLCanvas
 
+/**
+  * Main Frame class
+  * 
+  * This class is the primary Frame for handling GL drawing.
+  * It contains a GLEventListener implementation for handling
+  * user input, and a GLCanvas object for drawing to the 
+  * graphics card.
+  */
 class MainFrame extends JFrame with GLEventListener {
+
   override def display(drawable:GLAutoDrawable):Unit={
 
   }
