@@ -4,7 +4,7 @@ package com.celestia
 import javax.swing.JFrame 
 import com.jogamp.opengl.GLEventListener
 import com.jogamp.opengl.GLAutoDrawable 
-import com.jogamp.opengl.GLCanvas
+//import com.jogamp.opengl.GLCanvas
 
 /**
   * Main Frame class

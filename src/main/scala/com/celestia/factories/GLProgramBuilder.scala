@@ -1,6 +1,8 @@
 
 package com.celestia.factories
 
+import com.celestia.models.GLProgram 
+
 /**
   * Builder class for constructing a valid GL Program
   * from multiple shader obejcts. This class can take
@@ -17,7 +19,7 @@ class GLProgramBuilder {
     * Add a new shader to the current program.
     */
   def addShader(shaderPath:String, shaderType:Int):Int={
-
+    0
   }
 
 
@@ -25,7 +27,7 @@ class GLProgramBuilder {
     * Construct the new program from the supplied 
     * shaders. 
     */
-  def buildProgram:GLProgram={
-    None 
-  }
+  //def buildProgram:GLProgram={
+  //  None 
+  //} 
 }
