@@ -5,7 +5,7 @@ import com.jogamp.opengl._
 
 object Main {
   def main(args: Array[String]) {
-    //println("Hello, World!")
+    println("Hello, World!")
     new MainFrame()
   }
 }
