@@ -15,12 +15,25 @@ import com.celestia.interfaces.IGLProgramBuilder
   */
 class GLProgramBuilder extends IGLProgramBuilder {
 
+  /**
+    * Constants for setting shaders 
+    */
+  lazy val FRAGMENT_SHADER:Int=0
+  lazy val VERTEX_SHADER:Int=1
+  lazy val GEOMETRY_SHADER:Int=2
+  lazy val NUM_SHADERS:Int=3
+
+  /**
+    * List of collected shader objects 
+    */
+  lazy val shaders:List[Int]=new List[Int](NUM_SHADERS) 
 
   /**
     * Add a new shader to the current program.
     */
   def addShader(shaderPath:String, shaderType:Int):Int={
-    0
+    //shaders(shaderType) 
+    0 
   }
 
 
