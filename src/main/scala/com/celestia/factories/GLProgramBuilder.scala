@@ -1,7 +1,8 @@
 
 package com.celestia.factories
 
-import com.celestia.models.GLProgram 
+import com.celestia.models.GLProgram
+import com.celestia.interfaces.IGLProgramBuilder 
 
 /**
   * Builder class for constructing a valid GL Program
@@ -12,7 +13,7 @@ import com.celestia.models.GLProgram
   * the shader collection and construct a new GLProgram
   * from the shader collection.
   */
-class GLProgramBuilder {
+class GLProgramBuilder extends IGLProgramBuilder {
 
 
   /**
@@ -27,7 +28,7 @@ class GLProgramBuilder {
     * Construct the new program from the supplied 
     * shaders. 
     */
-  //def buildProgram:GLProgram={
-  //  None 
-  //} 
+  def buildProgram:GLProgram={
+    new GLProgram(0, 0, 0, 0)  
+  } 
 }
