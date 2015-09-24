@@ -1,7 +1,13 @@
 #version 430
-in vec4 input;
 
+in vec4 varyingColor;
+
+out vec4 fragmentColor; 
+
+/**
+ * Simple passthrough Fragment shader 
+ */
 void main(void) {
-  gl_Position = input; 
+  fragmentColor = varyingColor; 
 }
 
