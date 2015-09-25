@@ -1,9 +1,10 @@
 package com.celestia.util
 
-import javax.script.{ScriptEngine, ScriptEngineManager}
+import javax.script.{CompiledScript, ScriptEngine, ScriptEngineManager}
+import com.celestia.providers.ScriptProvider
 import com.jogamp.opengl.{GLAutoDrawable, GLEventListener}
 import com.celestia.factories.GLProgramBuilder
-import com.celestia.interfaces.IGLProgramBuilder
+import com.celestia.interfaces.{IScriptProvider, IGLProgramBuilder}
 import com.celestia.models.GLProgram
 
 /**
@@ -15,6 +16,8 @@ class GLEventHandler extends GLEventListener {
   private lazy val glProgramBuilder:IGLProgramBuilder = new GLProgramBuilder
   private var glProgram:GLProgram = new GLProgram(0, 0, 0, 0)
 
+  private lazy val scriptProvider:IScriptProvider = new ScriptProvider()
+  private var compiledScripts:List[CompiledScript] = List()
 
   /**
    * Function for handling initialization of the GL components
@@ -22,13 +25,18 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def init(glAutoDrawable: GLAutoDrawable): Unit = {
-    glProgramBuilder.addShader(R.shaders.FragmentShader, R.shader_types.FRAGMENT_SHADER)
+    glProgram = glProgramBuilder.addShader(R.shaders.FragmentShader, R.shader_types.FRAGMENT_SHADER)
       .addShader(R.shaders.VertexShader, R.shader_types.VERTEX_SHADER)
-    glProgram = glProgramBuilder.build(glAutoDrawable)
-
+      .build(glAutoDrawable)
+    compiledScripts = initScripts
   }
 
-//  private def initScripts()
+
+  /**
+   * Initialize scripts for scripting manager
+   * @return
+   */
+  private def initScripts: List[CompiledScript] = scriptProvider.addScript(R.ruby.main).compileScripts
 
 
   /**
@@ -36,7 +44,7 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def display(glAutoDrawable: GLAutoDrawable): Unit = {
-
+    compiledScripts.foreach((i)=>i.eval())
   }
 
 
