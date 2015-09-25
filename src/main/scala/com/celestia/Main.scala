@@ -34,15 +34,6 @@ object Main {
     //System.loadLibrary("gluegen-rt.jar")
     //System.loadLibrary("libgluegen-rt.so") 
     new MainFrame()
-//    val factory = new JRubyScriptEngineManager()
-//    val file = new File(".")
-//    println(file.getAbsolutePath)
-//    val factory = new ScriptEngineManager()
-//    val ruby = factory.getEngineByName("jruby")
-////    val url = getClass().getResource(R.ruby.main)
-////    val stream = url.openStream()
-//    val stream = new FileReader(new File(R.ruby.main))
-//    ruby.eval(stream)
   }
 }
 

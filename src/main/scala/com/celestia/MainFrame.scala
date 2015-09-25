@@ -3,7 +3,10 @@ package com.celestia
 
 import java.awt.Dimension
 import java.awt.BorderLayout 
-import javax.swing.JFrame 
+import javax.swing.JFrame
+
+import com.jogamp.opengl.util.FPSAnimator
+
 //import com.jogamp.opengl.GLEventListener
 //import com.jogamp.opengl.GLAutoDrawable
 import com.jogamp.opengl.awt.GLCanvas
@@ -27,11 +30,12 @@ class MainFrame extends JFrame {
   lazy val defaultWidth: Int = 1000
   lazy val defaultHeight: Int = (defaultWidth * aspectRatio).toInt 
   lazy val Size: Dimension = new Dimension(defaultWidth, defaultHeight)
+  lazy val fps: Int = 50
 
   // GLCanvas object for rendering
   lazy val glEVentHandler: GLEventHandler = new GLEventHandler
   lazy val glCanvas: GLCanvas = new GLCanvas
-
+  lazy val fpsAnimator:FPSAnimator = new FPSAnimator(50)
 
   /**
    * Initializer for creating the base JFrame object
@@ -42,10 +46,12 @@ class MainFrame extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
     setLayout(new BorderLayout)
     glCanvas.addGLEventListener(glEVentHandler)
+    glCanvas.setAnimator(fpsAnimator)
     add(glCanvas, BorderLayout.CENTER)
     setSize(Size) 
     setLocationRelativeTo(null) 
-    setVisible(true) 
+    setVisible(true)
+    fpsAnimator.start()
   }
 
   // Call initializer function 

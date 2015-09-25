@@ -19,7 +19,7 @@ import com.jogamp.opengl.awt.GLCanvas
  * the shader collection and construct a new GLProgram
  * from the shader collection.
  */
-class GLProgramBuilder(val shaders: List[(String, Int)]) extends IGLProgramBuilder {
+class GLProgramBuilder(val shaders: List[(String, Int)]=List()) extends IGLProgramBuilder {
 
   /**
    * Add a new shader to the current program.

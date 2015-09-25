@@ -2,12 +2,12 @@
 package com.celestia.providers
 
 import java.io.FileReader
-import javax.script.{Compilable, CompiledScript}
+import javax.script.{ScriptEngineManager, Compilable, CompiledScript}
 
 import com.celestia.interfaces.IScriptProvider
 import org.jruby.embed.jsr223.JRubyScriptEngineManager
 
-class ScriptProvider(scripts:List[String]) extends IScriptProvider {
+class ScriptProvider(scripts:List[String]=List()) extends IScriptProvider {
 
   /**
    * Add a new script path to the list of scripts
@@ -25,7 +25,8 @@ class ScriptProvider(scripts:List[String]) extends IScriptProvider {
    * @return
    */
   override def compileScripts:List[CompiledScript]={
-    val factory = new JRubyScriptEngineManager()
+//    val factory = new JRubyScriptEngineManager()
+    val factory = new ScriptEngineManager
     val ruby = factory.getEngineByName("jruby")
     scripts.map((path) => {
       val fileReader = new FileReader(path)

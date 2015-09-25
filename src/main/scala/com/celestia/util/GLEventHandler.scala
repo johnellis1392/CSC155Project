@@ -1,11 +1,13 @@
 package com.celestia.util
 
+import java.nio.FloatBuffer
 import javax.script.{CompiledScript, ScriptEngine, ScriptEngineManager}
-import com.celestia.providers.ScriptProvider
-import com.jogamp.opengl.{GLAutoDrawable, GLEventListener}
-import com.celestia.factories.GLProgramBuilder
-import com.celestia.interfaces.{IScriptProvider, IGLProgramBuilder}
-import com.celestia.models.GLProgram
+import com.celestia.providers.{ServiceProvider, ScriptProvider}
+import com.celestia.services.{UpdateService, RenderService}
+import com.jogamp.opengl.{GL4, GLAutoDrawable, GLEventListener}
+import com.celestia.factories.{GameObjectFactory, GLProgramBuilder}
+import com.celestia.interfaces._
+import com.celestia.models.{GameState, GLProgram}
 
 /**
  * Created by celestia on 9/24/15.
@@ -14,10 +16,17 @@ class GLEventHandler extends GLEventListener {
 
   // Values for holding the state of the game
   private lazy val glProgramBuilder:IGLProgramBuilder = new GLProgramBuilder
-  private var glProgram:GLProgram = new GLProgram(0, 0, 0, 0)
+  private var glProgram:GLProgram = new GLProgram(-1, List[Int]())
 
   private lazy val scriptProvider:IScriptProvider = new ScriptProvider()
   private var compiledScripts:List[CompiledScript] = List()
+
+  private lazy val serviceProvider:IServiceProvider = new ServiceProvider
+  private lazy val renderService:IRenderService = serviceProvider.getRenderService
+  private lazy val updateService:IUpdateService = serviceProvider.getUpdateService
+  private lazy val collisionService:ICollisionService = serviceProvider.getCollisionService
+
+  private var gameState:IGameState = GameObjectFactory.initGameState
 
   /**
    * Function for handling initialization of the GL components
@@ -44,7 +53,10 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def display(glAutoDrawable: GLAutoDrawable): Unit = {
+    gameState = updateService.update(gameState)
+    collisionService.detectCollisions(gameState.gameWorld)
     compiledScripts.foreach((i)=>i.eval())
+    renderService.render(gameState.gameWorld, glAutoDrawable)
   }
 
 

@@ -1,4 +1,5 @@
-#version 430
+#version 210
+//#version 430
 
 in vec4 varyingColor;
 

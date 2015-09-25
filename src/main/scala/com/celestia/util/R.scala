@@ -27,5 +27,9 @@ object R {
     lazy val FRAGMENT_SHADER:Int = GL2ES2.GL_FRAGMENT_SHADER
     lazy val GEOMETRY_SHADER:Int = GL3.GL_GEOMETRY_SHADER
   }
+
+  object vertices {
+//    lazy val triangle
+  }
 }
 
