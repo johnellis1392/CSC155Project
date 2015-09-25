@@ -22,11 +22,13 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def init(glAutoDrawable: GLAutoDrawable): Unit = {
-    glProgramBuilder.addShader(R.shaders.FragmentShader, 0)
-      .addShader(R.shaders.VertexShader, 1)
+    glProgramBuilder.addShader(R.shaders.FragmentShader, R.shader_types.FRAGMENT_SHADER)
+      .addShader(R.shaders.VertexShader, R.shader_types.VERTEX_SHADER)
     glProgram = glProgramBuilder.build(glAutoDrawable)
 
   }
+
+//  private def initScripts()
 
 
   /**

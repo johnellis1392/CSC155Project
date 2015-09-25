@@ -19,21 +19,12 @@ import com.jogamp.opengl.awt.GLCanvas
  * the shader collection and construct a new GLProgram
  * from the shader collection.
  */
-class GLProgramBuilder extends IGLProgramBuilder {
-
-  /**
-   * Constants for setting shaders
-   */
-  private val shaders:util.ArrayList[(String, Int)] = new util.ArrayList[(String, Int)]
-
+class GLProgramBuilder(val shaders: List[(String, Int)]) extends IGLProgramBuilder {
 
   /**
    * Add a new shader to the current program.
    */
-  override def addShader(shaderPath:String, shaderType:Int):IGLProgramBuilder={
-    shaders.add((shaderPath, shaderType))
-    this
-  }
+  override def addShader(shaderPath:String, shaderType:Int):IGLProgramBuilder = new GLProgramBuilder((shaderPath, shaderType) :: shaders)
 
 
   /**
@@ -42,13 +33,26 @@ class GLProgramBuilder extends IGLProgramBuilder {
    */
   override def build(drawable:GLAutoDrawable):GLProgram={
     // Get GL Context 
-    val gl:GL = drawable.getGL();
+    val gl:GL4 = drawable.getGL.asInstanceOf[GL4];
+    val programId:Int = gl.glCreateProgram()
 
-//    val vshaderId:Int=gl.glCreateShader(GL4.GL_VERTEX_SHADER)
-//    val vshaderStream:FileStream=new FileStream(new File(vshader))
-//    gl.glShaderSource(vshaderId, vshaderStream.getSize(), vshaderStream, null)
-//    gl.glCompileShader(vshaderId);
-    new GLProgram(0,0,0,0)
-  } 
+    // Iterate through shader list and compile
+    // all shader sources
+    val shaderIds = shaders.foldLeft(List[Int]())((list, pair) => {
+      val shaderSource:Array[String] = io.Source.fromFile(pair._1).map((i)=>i.toString).toArray
+      val lineLengths:Array[Int] = shaderSource.map((i)=>i.length)
+      val shaderId = gl.glCreateShader(pair._2)
+      gl.glShaderSource(shaderId, shaderSource.length, shaderSource, lineLengths, 0)
+      gl.glCompileShader(shaderId)
+      gl.glAttachShader(programId, shaderId)
+      shaderId :: list
+    })
+
+    // Link the program and return a new GLProgram
+    // wrapper object
+    gl.glLinkProgram(programId)
+    shaderIds.foreach((i)=>gl.glDeleteShader(i))
+    new GLProgram(programId, shaderIds)
+  }
 }
 

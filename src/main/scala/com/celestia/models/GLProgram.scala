@@ -9,8 +9,6 @@ package com.celestia.models
   */
 case class GLProgram(
   programId:Int,
-  vshaderId:Int,
-  fshaderId:Int,
-  gshaderId:Int
+  shaders:List[Int]
 )
 
