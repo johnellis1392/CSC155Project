@@ -21,7 +21,7 @@ class GLProgramBuilder extends IGLProgramBuilder {
   /**
     * Constants for setting shaders 
     */
-  lazy val FRAGMENT_SHADER:Int=0 
+  /*lazy val FRAGMENT_SHADER:Int=0 
   lazy val VERTEX_SHADER:Int=1 
   lazy val GEOMETRY_SHADER:Int=2 
   lazy val NUM_SHADERS:Int=3 
@@ -29,16 +29,21 @@ class GLProgramBuilder extends IGLProgramBuilder {
   val vshader:String 
   val fshader:String
   val gshader:String 
+   */
 
   /**
     * Add a new shader to the current program.
     */
-  def addShader(shaderPath:String, shaderType:Int):Int=shaderType match {
+  def addShader(shaderPath:String, shaderType:Int):Int=None
+
+
+  /*def addShader(shaderPath:String, shaderType:Int):Int=shaderType match {
     //shaders(shaderType) 
     case FRAGMENT_SHADER => fshader = shaderPath; 
     case VERTEX_SHADER   => vshader = shaderPath; 
     case GEOMETRY_SHADER => gshader = shaderPath; 
-  }
+   }*/
+
 
 
   /**

@@ -4,9 +4,13 @@ package com.celestia
 import java.awt.Dimension
 import java.awt.BorderLayout 
 import javax.swing.JFrame 
-import com.jogamp.opengl.GLEventListener
-import com.jogamp.opengl.GLAutoDrawable
-import com.jogamp.opengl.awt.GLCanvas 
+//import com.jogamp.opengl.GLEventListener
+//import com.jogamp.opengl.GLAutoDrawable
+import com.jogamp.opengl.awt.GLCanvas
+
+import com.celestia.util.R
+import com.celestia.util.GLEventHandler
+
 
 /**
   * Main Frame class
@@ -16,7 +20,7 @@ import com.jogamp.opengl.awt.GLCanvas
   * user input, and a GLCanvas object for drawing to the 
   * graphics card.
   */
-class MainFrame extends JFrame with GLEventListener {
+class MainFrame extends JFrame {
 
   // General variables to do with JFrame dimensions 
   lazy val aspectRatio: Double = 9.0 / 16.0 
@@ -25,26 +29,24 @@ class MainFrame extends JFrame with GLEventListener {
   lazy val Size: Dimension = new Dimension(defaultWidth, defaultHeight)
 
   // GLCanvas object for rendering
-  lazy val glCanvas: GLCanvas = new GLCanvas 
+  lazy val glEVentHandler: GLEventHandler = new GLEventHandler
+  lazy val glCanvas: GLCanvas = new GLCanvas
+
 
   /**
-    * Initializer for creating the base JFrame object 
-    */
+   * Initializer for creating the base JFrame object
+   */
   def setup {
     println("Initializing GL Frame...")
     setTitle("Test Panel") 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
     setLayout(new BorderLayout)
-    add(glCanvas) 
+    glCanvas.addGLEventListener(glEVentHandler)
+    add(glCanvas, BorderLayout.CENTER)
     setSize(Size) 
     setLocationRelativeTo(null) 
     setVisible(true) 
   }
-
-  override def display(drawable:GLAutoDrawable):Unit={}
-  override def init(drawable:GLAutoDrawable):Unit={}
-  override def reshape(drawable:GLAutoDrawable, x:Int, y:Int, width:Int, height:Int):Unit={}
-  override def dispose(drawable:GLAutoDrawable):Unit={}
 
   // Call initializer function 
   setup
