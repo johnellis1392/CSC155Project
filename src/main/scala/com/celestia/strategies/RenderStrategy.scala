@@ -6,6 +6,6 @@ import com.jogamp.opengl.GLAutoDrawable
 
 class RenderStrategy extends IRenderStrategy {
   override def render(gameObject: IGameObject, gl: GLAutoDrawable): Unit = {
-    None
+
   }
 }

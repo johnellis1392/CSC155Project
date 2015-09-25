@@ -1,8 +1,9 @@
 package com.celestia.util
 
+import javax.script.{ScriptEngine, ScriptEngineManager}
+import com.jogamp.opengl.{GLAutoDrawable, GLEventListener}
 import com.celestia.factories.GLProgramBuilder
 import com.celestia.interfaces.IGLProgramBuilder
-import com.jogamp.opengl.{GLAutoDrawable, GLEventListener}
 import com.celestia.models.GLProgram
 
 /**
@@ -22,8 +23,8 @@ class GLEventHandler extends GLEventListener {
    */
   override def init(glAutoDrawable: GLAutoDrawable): Unit = {
     glProgramBuilder.addShader(R.shaders.FragmentShader, 0)
-    glProgramBuilder.addShader(R.shaders.VertexShader, 1)
-    glProgram = glProgramBuilder.buildProgram()
+      .addShader(R.shaders.VertexShader, 1)
+    glProgram = glProgramBuilder.build(glAutoDrawable)
 
   }
 

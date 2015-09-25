@@ -1,7 +1,8 @@
 
 package com.celestia.models
 
-import com.celestia.interfaces.{IRenderStrategy, IUpdateStrategy, IGameObject}
+import com.celestia.interfaces.{IGameObject, IRenderStrategy, IUpdateStrategy}
+import graphicslib3D.Matrix3D
 
 /**
   * Game Object class for holding state of an

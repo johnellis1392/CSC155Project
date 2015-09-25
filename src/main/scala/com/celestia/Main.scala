@@ -1,7 +1,12 @@
 
 package com.celestia
 
+import java.io.{FileReader, InputStreamReader, File}
+import javax.script.ScriptEngineManager
+
+import com.celestia.util.R
 import com.jogamp.opengl._
+import org.jruby.embed.jsr223.JRubyScriptEngineManager
 
 object Main {
 
@@ -29,6 +34,15 @@ object Main {
     //System.loadLibrary("gluegen-rt.jar")
     //System.loadLibrary("libgluegen-rt.so") 
     new MainFrame()
+//    val factory = new JRubyScriptEngineManager()
+//    val file = new File(".")
+//    println(file.getAbsolutePath)
+//    val factory = new ScriptEngineManager()
+//    val ruby = factory.getEngineByName("jruby")
+////    val url = getClass().getResource(R.ruby.main)
+////    val stream = url.openStream()
+//    val stream = new FileReader(new File(R.ruby.main))
+//    ruby.eval(stream)
   }
 }
 

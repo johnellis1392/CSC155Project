@@ -2,8 +2,8 @@ package com.celestia.models
 
 import com.celestia.factories.GameObjectFactory
 import com.celestia.interfaces.{IGameObject, IRenderStrategy, IUpdateStrategy}
-import com.celestia.models.GameObject
 import com.jogamp.opengl.GLAutoDrawable
+import graphicslib3D.Matrix3D
 
 /**
  * Created by celestia on 9/24/15.
@@ -16,7 +16,7 @@ class Triangle(
               renderStrategy:IRenderStrategy
 ) extends GameObject(position, rotation, scale, updateStrategy, renderStrategy) {
   override def update(elapsedTimeMS:Double):IGameObject={
-    new GameObjectFactory.makeTriangle()
+    GameObjectFactory.makeTriangle
   }
 
   override def render(gl:GLAutoDrawable):Unit={

@@ -1,6 +1,7 @@
 
 package com.celestia.interfaces
 
+import com.jogamp.opengl.{GL3, GL2ES2, GL4, GLAutoDrawable}
 import com.celestia.models.GLProgram
 
 /**
@@ -10,6 +11,10 @@ import com.celestia.models.GLProgram
   * to a program and compiling them on the GPU. 
   */
 trait IGLProgramBuilder {
-  def addShader(shaderPath:String, shaderType:Int):Int
-  def buildProgram():GLProgram
+  lazy val VERTEX_SHADER:Int = GL2ES2.GL_VERTEX_SHADER
+  lazy val FRAGMENT_SHADER:Int = GL2ES2.GL_FRAGMENT_SHADER
+  lazy val GEOMETRY_SHADER:Int = GL3.GL_GEOMETRY_SHADER
+
+  def addShader(shaderPath:String, shaderType:Int):IGLProgramBuilder
+  def build(gl:GLAutoDrawable):GLProgram
 }
