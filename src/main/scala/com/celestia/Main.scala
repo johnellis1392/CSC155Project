@@ -10,6 +10,13 @@ import org.jruby.embed.jsr223.JRubyScriptEngineManager
 
 object Main {
 
+  //println("Hello, World!")
+  //println(System.getProperty("java.library.path"))
+  //unsafeAddDir("./lib")
+  //println(System.getProperty("java.library.path"))
+  //System.loadLibrary("gluegen-rt.jar")
+  //System.loadLibrary("libgluegen-rt.so")
+
   def unsafeAddDir(dir:String)=try {
     val field = classOf[ClassLoader].getDeclaredField("usr_paths")
     field.setAccessible(true)
@@ -27,12 +34,6 @@ object Main {
   } 
 
   def main(args: Array[String]) {
-    //println("Hello, World!")
-    //println(System.getProperty("java.library.path")) 
-    //unsafeAddDir("./lib")
-    //println(System.getProperty("java.library.path"))
-    //System.loadLibrary("gluegen-rt.jar")
-    //System.loadLibrary("libgluegen-rt.so") 
     new MainFrame()
   }
 }

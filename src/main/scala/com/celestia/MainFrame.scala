@@ -30,24 +30,22 @@ class MainFrame extends JFrame {
   lazy val defaultWidth: Int = 1000
   lazy val defaultHeight: Int = (defaultWidth * aspectRatio).toInt 
   lazy val Size: Dimension = new Dimension(defaultWidth, defaultHeight)
-  lazy val fps: Int = 50
 
   // GLCanvas object for rendering
   lazy val glEVentHandler: GLEventHandler = new GLEventHandler
   lazy val glCanvas: GLCanvas = new GLCanvas
-  lazy val fpsAnimator:FPSAnimator = new FPSAnimator(50)
+  lazy val fpsAnimator:FPSAnimator = new FPSAnimator(glCanvas, R.util.fps)
 
   /**
    * Initializer for creating the base JFrame object
    */
   def setup {
-    println("Initializing GL Frame...")
-    setTitle("Test Panel") 
+    setTitle(R.util.title)
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
     setLayout(new BorderLayout)
+    getContentPane.add(glCanvas)
     glCanvas.addGLEventListener(glEVentHandler)
     glCanvas.setAnimator(fpsAnimator)
-    add(glCanvas, BorderLayout.CENTER)
     setSize(Size) 
     setLocationRelativeTo(null) 
     setVisible(true)

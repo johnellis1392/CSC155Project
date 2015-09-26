@@ -1,6 +1,7 @@
 package com.celestia.providers
 
 import com.celestia.interfaces.{ICollisionService, IUpdateService, IRenderService, IServiceProvider}
+import com.celestia.models.GLProgram
 import com.celestia.services.{CollisionService, UpdateService, RenderService}
 
 /**

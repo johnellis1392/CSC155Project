@@ -22,11 +22,12 @@ class GLEventHandler extends GLEventListener {
   private var compiledScripts:List[CompiledScript] = List()
 
   private lazy val serviceProvider:IServiceProvider = new ServiceProvider
-  private lazy val renderService:IRenderService = serviceProvider.getRenderService
   private lazy val updateService:IUpdateService = serviceProvider.getUpdateService
   private lazy val collisionService:ICollisionService = serviceProvider.getCollisionService
+  private lazy val renderService:IRenderService = serviceProvider.getRenderService
 
   private var gameState:IGameState = GameObjectFactory.initGameState
+
 
   /**
    * Function for handling initialization of the GL components
@@ -34,8 +35,8 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def init(glAutoDrawable: GLAutoDrawable): Unit = {
-    glProgram = glProgramBuilder.addShader(R.shaders.FragmentShader, R.shader_types.FRAGMENT_SHADER)
-      .addShader(R.shaders.VertexShader, R.shader_types.VERTEX_SHADER)
+    glProgram = glProgramBuilder.addShader(R.shaders.FragmentShader, R.gl.shaders.FRAGMENT_SHADER)
+      .addShader(R.shaders.VertexShader, R.gl.shaders.VERTEX_SHADER)
       .build(glAutoDrawable)
     compiledScripts = initScripts
   }
@@ -56,7 +57,7 @@ class GLEventHandler extends GLEventListener {
     gameState = updateService.update(gameState)
     collisionService.detectCollisions(gameState.gameWorld)
     compiledScripts.foreach((i)=>i.eval())
-    renderService.render(gameState.gameWorld, glAutoDrawable)
+    renderService.render(gameState, glAutoDrawable)
   }
 
 
