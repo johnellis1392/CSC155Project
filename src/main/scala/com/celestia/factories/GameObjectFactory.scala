@@ -51,9 +51,9 @@ object GameObjectFactory extends IGameObjectFactory {
    * @return
    */
   override def initCamera:ICamera=new Camera(
-    0,
-    0,
-    0
+    0.0f,
+    0.0f,
+    0.5f
   )
 //  override def initCamera:ICamera=new Camera(
 //    new Matrix3D(),

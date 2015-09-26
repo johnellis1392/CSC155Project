@@ -45,17 +45,27 @@ object R {
     lazy val GL_TRIANGLES:Int = GL.GL_TRIANGLES
     lazy val GL_CULL_FACE:Int = GL.GL_CULL_FACE
     lazy val GL_CW:Int = GL.GL_CW
+    lazy val GL_CCW:Int = GL.GL_CCW
     lazy val GL_DEPTH_TEST:Int = GL.GL_DEPTH_TEST
     lazy val GL_LEQUAL:Int = GL.GL_LEQUAL
 
     lazy val GL_ARRAY_BUFFER:Int = GL.GL_ARRAY_BUFFER
     lazy val GL_POINTS:Int = GL.GL_POINTS
     lazy val GL_FLOAT:Int = GL.GL_FLOAT
+    lazy val GL_STATIC_DRAW:Int = GL.GL_STATIC_DRAW
   }
 
   // Vertices for game objects
   object vertices {
 //    lazy val triangle
+    lazy val pyramid:Array[Float] = Array[Float] (
+      0.25f, -0.25f, -0.25f, -0.25f, -0.25f, -0.25f, 0.0f, 0.25f, 0.0f,
+      -0.25f, -0.25f, -0.25f, -0.25f, -0.25f, 0.25f, 0.0f, 0.25f, 0.0f,
+      -0.25f, -0.25f, 0.25f, 0.25f, -0.25f, 0.25f, 0.0f, 0.25f, 0.0f,
+      0.25f, -0.25f, 0.25f, 0.25f, -0.25f, -0.25f, 0.0f, 0.25f, 0.0f,
+      -0.25f, -0.25f, -0.25f, 0.25f, -0.25f, 0.25f, -0.25f, -0.25f, 0.25f,
+      -0.25f, -0.25f, -0.25f, 0.25f, -0.25f, -0.25f, 0.25f, -0.25f, 0.25f
+    )
   }
 
   // Miscellaneous
