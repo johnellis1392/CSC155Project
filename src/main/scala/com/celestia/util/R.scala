@@ -1,7 +1,7 @@
 
 package com.celestia.util
 
-import com.jogamp.opengl.{GL3, GL2ES2, GL2, GL2GL3}
+import com.jogamp.opengl._
 
 /**
   * Static Singleton object for storing directory
@@ -32,8 +32,10 @@ object R {
       lazy val GEOMETRY_SHADER:Int = GL3.GL_GEOMETRY_SHADER
     }
 
-    lazy val GL_COLOR:Int = 0
-    lazy val GL_DEPTH_BUFFER_BIT:Int = 0
+    lazy val GL_COLOR:Int = GL2ES3.GL_COLOR
+    lazy val GL_COLOR_BUFFER_BIT:Int = GL.GL_COLOR_BUFFER_BIT
+    lazy val GL_DEPTH_BUFFER_BIT:Int = GL.GL_DEPTH_BUFFER_BIT
+    lazy val GL_TRIANGLES:Int = GL.GL_TRIANGLES
   }
 
   // Vertices for game objects

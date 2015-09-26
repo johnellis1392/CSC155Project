@@ -22,7 +22,7 @@ class RenderService() extends IRenderService {
     color.put(2, 0.5f)
     color.put(3, 0.5f)
     gl.glClear(R.gl.GL_DEPTH_BUFFER_BIT)
-    gl.glClearDepthf(R.gl.GL_COLOR)
+    gl.glClearBufferfv(R.gl.GL_COLOR, 0, color)
     gameState.gameWorld.gameObjects.foreach((gameObject) => gameObject.render(glAutoDrawable))
   }
 }
