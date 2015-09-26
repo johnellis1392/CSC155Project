@@ -12,9 +12,9 @@ class UpdateService extends IUpdateService {
         List()
       ),
       new Camera(
-        new Matrix3D(),
-        new Matrix3D(),
-        new Matrix3D()
+        gameState.camera.x,
+        gameState.camera.y,
+        gameState.camera.z
       )
     )
   }

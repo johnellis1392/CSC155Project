@@ -7,13 +7,14 @@ import graphicslib3D.Matrix3D
 /**
  * Class for encapsulating the camera view
  * as a mutatable object
- * @param position
- * @param rotation
- * @param zoom
  */
 case class Camera(
-  override val position:Matrix3D,
-  override val rotation:Matrix3D,
-  override val zoom:Matrix3D 
+  override val x:Float,
+  override val y:Float,
+  override val z:Float
 ) extends ICamera
 
+
+//  override val position:Matrix3D,
+//  override val rotation:Matrix3D,
+//  override val zoom:Matrix3D

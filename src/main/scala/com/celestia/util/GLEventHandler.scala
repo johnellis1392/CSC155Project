@@ -8,6 +8,8 @@ import com.jogamp.opengl.{GL4, GLAutoDrawable, GLEventListener}
 import com.celestia.factories.{GameObjectFactory, GLProgramBuilder}
 import com.celestia.interfaces._
 import com.celestia.models.{GameState, GLProgram}
+import com.celestia.MainFrame
+import graphicslib3D.Matrix3D
 
 /**
  * Created by celestia on 9/24/15.
@@ -27,7 +29,7 @@ class GLEventHandler extends GLEventListener {
   private lazy val renderService:IRenderService = serviceProvider.getRenderService
 
   private var gameState:IGameState = GameObjectFactory.initGameState
-
+  private var VAO:Array[Int] = new Array[Int](1)
 
   /**
    * Function for handling initialization of the GL components
@@ -35,10 +37,14 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def init(glAutoDrawable: GLAutoDrawable): Unit = {
+    val gl:GL4 = glAutoDrawable.getGL.asInstanceOf[GL4]
     glProgram = glProgramBuilder.addShader(R.shaders.FragmentShader, R.gl.shaders.FRAGMENT_SHADER)
       .addShader(R.shaders.VertexShader, R.gl.shaders.VERTEX_SHADER)
       .build(glAutoDrawable)
     compiledScripts = initScripts
+
+    gl.glGenVertexArrays(VAO.length, VAO, 0)
+    gl.glBindVertexArray(VAO(0))
   }
 
 
@@ -49,15 +55,66 @@ class GLEventHandler extends GLEventListener {
   private def initScripts: List[CompiledScript] = scriptProvider.addScript(R.ruby.main).compileScripts
 
 
+
+  // Temporary values for handling display
+  var x:Float = 0
+  var y:Float = 0
+  var z:Float = 0
+
   /**
    * Function for rendering the game world
    * @param glAutoDrawable
    */
   override def display(glAutoDrawable: GLAutoDrawable): Unit = {
+    val gl:GL4 = glAutoDrawable.getGL.asInstanceOf[GL4]
     gameState = updateService.update(gameState)
     collisionService.detectCollisions(gameState.gameWorld)
     compiledScripts.foreach((i)=>i.eval())
-    renderService.render(gameState, glAutoDrawable)
+
+    gl.glUseProgram(glProgram.programId)
+    val mvLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.model_view_matrix)
+    val projectionLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.projection_matrix)
+
+    val viewMatrix:Matrix3D = new Matrix3D()
+    viewMatrix.translate(-gameState.camera.x,
+      -gameState.camera.y,
+      -gameState.camera.z)
+
+    val modelMatrix:Matrix3D = new Matrix3D()
+    val amount:Double = System.currentTimeMillis() % 3600 / 10.0
+
+    modelMatrix.rotate(amount, amount, amount)
+    modelMatrix.translate(x, y, z)
+
+    val modelViewMatrix:Matrix3D = new Matrix3D()
+    modelViewMatrix.concatenate(viewMatrix)
+    modelViewMatrix.concatenate(modelMatrix)
+
+    val aspect:Float = R.util.aspect.toFloat
+    val projectionMatrix:Matrix3D = perspective(50.0f, aspect, 0.1f, 1000.0f)
+
+    gl.glUniformMatrix4fv(mvLocation, 1, false, modelViewMatrix.getFloatValues, 0)
+    gl.glUniformMatrix4fv(projectionLocation, 1, false, projectionMatrix.getFloatValues, 0)
+
+    gl.glBindBuffer(R.gl.GL_ARRAY_BUFFER, VAO(0))
+    gl.glVertexAttribPointer(0, 3, R.gl.GL_FLOAT, false, 0, 0)
+    gl.glDrawArrays(R.gl.GL_POINTS, 0, 1)
+//    renderService.render(gameState, glAutoDrawable)
+  }
+
+  private def perspective(fovy:Float, aspect:Float, n:Float, f:Float):Matrix3D={
+    val q:Float = (1.0f / Math.tan(Math.toRadians(0.5f * fovy))).toFloat
+    val A:Float = q / aspect
+    val B:Float = (n + f) / (n - f)
+    val C:Float = (2.0f * n * f) / (n - f)
+    val r:Matrix3D = new Matrix3D()
+
+    r.setElementAt(0,0,A)
+    r.setElementAt(1,1,q)
+    r.setElementAt(2,2,B)
+    r.setElementAt(2,3,-1.0f)
+    r.setElementAt(3,2,C)
+    r.transpose()
   }
 
 

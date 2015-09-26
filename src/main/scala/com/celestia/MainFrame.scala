@@ -26,9 +26,12 @@ import com.celestia.util.GLEventHandler
 class MainFrame extends JFrame {
 
   // General variables to do with JFrame dimensions 
-  lazy val aspectRatio: Double = 9.0 / 16.0 
-  lazy val defaultWidth: Int = 1000
-  lazy val defaultHeight: Int = (defaultWidth * aspectRatio).toInt 
+//  lazy val aspectRatio: Double = 9.0 / 16.0
+//  lazy val defaultWidth: Int = 1000
+//  lazy val defaultHeight: Int = (defaultWidth * aspectRatio).toInt
+  lazy val aspectRation:Double = R.util.aspect
+  lazy val defaultWidth:Int = R.util.width
+  lazy val defaultHeight:Int = R.util.height
   lazy val Size: Dimension = new Dimension(defaultWidth, defaultHeight)
 
   // GLCanvas object for rendering

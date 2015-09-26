@@ -45,6 +45,7 @@ class GLProgramBuilder(val shaders: List[(String, Int)]=List()) extends IGLProgr
       gl.glShaderSource(shaderId, shaderSource.length, shaderSource, lineLengths, 0)
       gl.glCompileShader(shaderId)
       gl.glAttachShader(programId, shaderId)
+      gl.glDeleteShader(shaderId)
       shaderId :: list
     })
 
