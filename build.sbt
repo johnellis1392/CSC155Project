@@ -14,12 +14,12 @@ unmanagedBase <<= baseDirectory { base => base / "lib" }
 mainClass in Compile := Some("com.celestia.Main")
 
 libraryDependencies ++= Seq(
-  "org.jogamp.gluegen" % "gluegen-rt-main" % "2.3.1",
-  "org.jogamp.jogl" % "jogl-all-main" % "2.3.1"
+  "org.jogamp.gluegen" % "gluegen-rt-main" % "2.3.1" % "provided",
+  "org.jogamp.jogl" % "jogl-all-main" % "2.3.1" % "provided"
 )
 
 libraryDependencies ++= Seq(
-  "org.jruby" % "jruby-complete" % "1.6.5" 
+  "org.jruby" % "jruby-complete" % "1.6.5"
 )
 
 // To Add Assembly function to Sbt:
