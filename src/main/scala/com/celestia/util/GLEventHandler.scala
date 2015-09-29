@@ -62,7 +62,9 @@ class GLEventHandler extends GLEventListener {
    * Initialize scripts for scripting manager
    * @return
    */
-  private def initScripts: List[CompiledScript] = scriptProvider.addScript(R.ruby.main).compileScripts
+  private def initScripts: List[CompiledScript] =
+    scriptProvider.addScript(R.ruby.main)
+      .compileScripts
 
 
 
@@ -75,54 +77,59 @@ class GLEventHandler extends GLEventListener {
    * Function for rendering the game world
    * @param glAutoDrawable
    */
-  override def display(glAutoDrawable: GLAutoDrawable): Unit = {
-    val gl:GL4 = glAutoDrawable.getGL.asInstanceOf[GL4]
-    gameState = updateService.update(gameState)
-    collisionService.detectCollisions(gameState.gameWorld)
-    compiledScripts.foreach((i)=>i.eval())
+  override def display(gLAutoDrawable: GLAutoDrawable):Unit={
 
-    gl.glClear(R.gl.GL_DEPTH_BUFFER_BIT)
-    gl.glUseProgram(glProgram.programId)
-
-    val mvLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.model_view_matrix)
-    val projectionLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.projection_matrix)
-
-    val viewMatrix:Matrix3D = new Matrix3D()
-    viewMatrix.translate(-gameState.camera.x,
-      -gameState.camera.y,
-      -gameState.camera.z)
-
-    val modelMatrix:Matrix3D = new Matrix3D()
-//    val amount:Double = System.currentTimeMillis() % 3600 / 10.0
-
-//    modelMatrix.rotate(amount, amount, amount)
-    modelMatrix.translate(x, y, z)
-    modelMatrix.rotateX(-20.0f)
-    modelMatrix.rotateY(35.0f)
-
-    val modelViewMatrix:Matrix3D = new Matrix3D()
-    modelViewMatrix.concatenate(viewMatrix)
-    modelViewMatrix.concatenate(modelMatrix)
-
-    val aspect:Float = R.util.aspect.toFloat
-    val projectionMatrix:Matrix3D = perspective(50.0f, aspect, 0.1f, 1000.0f)
-
-    gl.glUniformMatrix4fv(mvLocation, 1, false, modelViewMatrix.getFloatValues, 0)
-    gl.glUniformMatrix4fv(projectionLocation, 1, false, projectionMatrix.getFloatValues, 0)
-
-    gl.glBindBuffer(R.gl.GL_ARRAY_BUFFER, VBO(0))
-    gl.glVertexAttribPointer(0, 3, R.gl.GL_FLOAT, false, 0, 0)
-    gl.glEnableVertexAttribArray(1)
-
-    gl.glEnable(R.gl.GL_CULL_FACE)
-    gl.glFrontFace(R.gl.GL_CCW)
-    gl.glEnable(R.gl.GL_DEPTH_TEST)
-    gl.glDepthFunc(R.gl.GL_LEQUAL)
-
-    gl.glDrawArrays(R.gl.GL_TRIANGLES, 0, 18)
-//    gl.glDrawArrays(R.gl.GL_POINTS, 0, 18)
-//    renderService.render(gameState, glAutoDrawable)
   }
+
+//  override def display(glAutoDrawable: GLAutoDrawable): Unit = {
+//    val gl:GL4 = glAutoDrawable.getGL.asInstanceOf[GL4]
+//    gameState = updateService.update(gameState)
+//    collisionService.detectCollisions(gameState.gameWorld)
+//    compiledScripts.foreach((i)=>i.eval())
+//
+//    gl.glClear(R.gl.GL_DEPTH_BUFFER_BIT)
+//    gl.glUseProgram(glProgram.programId)
+//
+////    val mvLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.model_view_matrix)
+////    val projectionLocation:Int = gl.glGetUniformLocation(glProgram.programId, R.gl.uniforms.projection_matrix)
+//
+//    val viewMatrix:Matrix3D = new Matrix3D()
+//    viewMatrix.translate(
+//      -gameState.camera.x,
+//      -gameState.camera.y,
+//      -gameState.camera.z
+//    )
+//
+//    val modelMatrix:Matrix3D = new Matrix3D()
+////    val amount:Double = System.currentTimeMillis() % 3600 / 10.0
+//
+////    modelMatrix.rotate(amount, amount, amount)
+//    modelMatrix.translate(x, y, z)
+//    modelMatrix.rotateX(-20.0f)
+//    modelMatrix.rotateY(35.0f)
+//
+//    val modelViewMatrix:Matrix3D = new Matrix3D()
+//    modelViewMatrix.concatenate(viewMatrix)
+//    modelViewMatrix.concatenate(modelMatrix)
+//
+////    val aspect:Float = R.util.aspect.toFloat
+////    val projectionMatrix:Matrix3D = perspective(50.0f, aspect, 0.1f, 1000.0f)
+//
+////    gl.glUniformMatrix4fv(mvLocation, 1, false, modelViewMatrix.getFloatValues, 0)
+////    gl.glUniformMatrix4fv(projectionLocation, 1, false, projectionMatrix.getFloatValues, 0)
+//
+//    gl.glBindBuffer(R.gl.GL_ARRAY_BUFFER, VBO(0))
+//    gl.glVertexAttribPointer(0, 3, R.gl.GL_FLOAT, false, 0, 0)
+//    gl.glEnableVertexAttribArray(1)
+//
+//    gl.glEnable(R.gl.GL_CULL_FACE)
+//    gl.glFrontFace(R.gl.GL_CCW)
+//    gl.glEnable(R.gl.GL_DEPTH_TEST)
+//    gl.glDepthFunc(R.gl.GL_LEQUAL)
+//
+//    gl.glDrawArrays(R.gl.GL_TRIANGLES, 0, 18)
+////    renderService.render(gameState, glAutoDrawable)
+//  }
 
 
   private def perspective(fovy:Float, aspect:Float, n:Float, f:Float):Matrix3D={
@@ -159,7 +166,8 @@ class GLEventHandler extends GLEventListener {
    * @param glAutoDrawable
    */
   override def dispose(glAutoDrawable: GLAutoDrawable): Unit = {
-
+    val gl:GL4 = glAutoDrawable.getGL.asInstanceOf[GL4]
+    gl.glDeleteProgram(glProgram.programId)
   }
 
 }
