@@ -2,10 +2,10 @@
 package com.celestia.models;
 
 public class GameState {
-    public final ICamera camera; 
-    public final IGameWorld gameWorld;
+    public final Camera camera;
+    public final GameWorld gameWorld;
     
-    public GameState(ICamera camera, IGameWorld gameWorld) {
+    public GameState(Camera camera, GameWorld gameWorld) {
         this.camera = camera;
         this.gameWorld = gameWorld;
     }

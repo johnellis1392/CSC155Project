@@ -1,7 +1,7 @@
 
 package com.celestia.models;
 
-public class Camera implements ICamera {
+public class Camera {
     public final float x; 
     public final float y; 
     public final float z; 

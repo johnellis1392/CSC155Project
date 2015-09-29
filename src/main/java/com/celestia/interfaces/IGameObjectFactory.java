@@ -1,9 +1,14 @@
 
 package com.celestia.interfaces;
 
-public class IGameObjectFactory {
+import com.celestia.models.Camera;
+import com.celestia.models.GameState;
+import com.celestia.models.GameWorld;
+import com.celestia.models.Triangle;
+
+public interface IGameObjectFactory {
     public Triangle makeTriangle();
-    public IGameState initGameState();
-    public IGameWorld initGameWorld();
-    public ICamera initCamera();
+    public GameState initGameState();
+    public GameWorld initGameWorld();
+    public Camera initCamera();
 }

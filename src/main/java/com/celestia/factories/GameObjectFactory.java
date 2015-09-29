@@ -1,5 +1,11 @@
 
-package com.celestia.factories; 
+package com.celestia.factories;
+
+import com.celestia.interfaces.IGameObjectFactory;
+import com.celestia.models.Camera;
+import com.celestia.models.GameState;
+import com.celestia.models.GameWorld;
+import com.celestia.models.Triangle;
 
 public class GameObjectFactory implements IGameObjectFactory {
     
@@ -9,7 +15,7 @@ public class GameObjectFactory implements IGameObjectFactory {
     }
     
     @Override 
-    public IGameState initGameState() {
+    public GameState initGameState() {
         return new GameState(
             initCamera(),
             initGameWorld()
@@ -17,12 +23,12 @@ public class GameObjectFactory implements IGameObjectFactory {
     }
     
     @Override 
-    public IGameWorld initGameWorld() {
+    public GameWorld initGameWorld() {
         return new GameWorld();
     }
     
     @Override 
-    public ICamera initCamera() {
+    public Camera initCamera() {
         return new Camera();
     }
 }
