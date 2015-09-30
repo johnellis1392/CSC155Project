@@ -2,20 +2,20 @@
 //#version 430
 
 //in vec3 vertexPosition;
-in vec4 vertexColor;
+//in vec4 vertexColor;
 
-out vec4 varyingColor; 
+//out vec4 varyingColor;
 
-layout (location=0) in vec3 position;
-
-uniform mat4 model_view_matrix;
-uniform mat4 projection_matrix;
+//layout (location=0) in vec3 position;
+//
+//uniform mat4 model_view_matrix;
+//uniform mat4 projection_matrix;
 
 /**
  * Simple passthrough shader for now 
  */
 void main(void) {
-    varyingColor = vertexColor;
+//    varyingColor = vertexColor;
 //    gl_Position = vec4(vertexPosition, 1);
 //    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
 
@@ -26,9 +26,10 @@ void main(void) {
 //    );
 
 //    gl_Position = vertices[gl_VertexID];
+    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
 
-    gl_Position = projection_matrix *
-        model_view_matrix *
-        vec4(position, 1.0);
+//    gl_Position = projection_matrix *
+//        model_view_matrix *
+//        vec4(position, 1.0);
 }
 

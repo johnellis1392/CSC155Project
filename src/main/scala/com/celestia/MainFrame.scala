@@ -2,7 +2,8 @@
 package com.celestia
 
 import java.awt.Dimension
-import java.awt.BorderLayout 
+import java.awt.BorderLayout
+import java.nio.FloatBuffer
 import javax.swing.JFrame
 
 import com.jogamp.opengl.util.FPSAnimator
