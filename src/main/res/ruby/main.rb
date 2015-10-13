@@ -1,11 +1,11 @@
 
 import java.nio.FloatBuffer 
 import java.lang.System
+#import graphicslib3D.Matrix3D
 
 require 'java'
 $CLASSPATH << 'lib/graphicslib3D'
 #require 'graphicslib3D'
-#import graphicslib3D.Matrix3D
 
 =begin
 
@@ -54,22 +54,8 @@ def onDispose(glAutoDrawable)
 end
 =end
 
-#puts 'Hello, World! 2' 
-
 
 =begin
-# Wrapper class for scala hash maps
-class ScalaHashMap
-  def initialize(hash)
-    @hash = hash
-  end
-
-  def each
-    @hash.size().times{|key| yield key, @hash.get(key).get}
-  end
-end
-
-
 # Wrapper class for JOGL GL Context
 class PanelGL < JFrame
   def initialize(parent = nil)
@@ -102,6 +88,22 @@ class PanelGL < JFrame
   end
 end
 =end
+
+
+# Triangle class for storing position data
+class Triangle
+	def initialize(position, rotation, scale)
+		@position = position
+		@rotation = rotation
+		@scale = scale
+	end
+	
+	def initialize(data)
+		@position = data.position
+		@rotation = data.rotation
+		@scale = data.scale
+	end
+end
 
 
 gl = $gl

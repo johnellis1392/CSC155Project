@@ -1,9 +1,11 @@
 
 (import com.jogamp.opengl.GLEventListener)
 (import com.celestia.models)
-(ns com.celestia.util)
+(ns com.celestia.util
+	(:gen-class)
+	(:require []))
 
-(def mGameState (GameState.))
+(defonce mGameState (GameState.))
 
 ;; Event Handler class 
 (defrecord GLEventHandler []
@@ -11,9 +13,16 @@
     (defn init [glAutoDrawable] 
         ())
     
-    (defn display [glAutoDrawable] 
-        (def mGameState (update))
-        (render mGameState))
+;    (defn display [glAutoDrawable] 
+;        (reset! mGameState (update))
+;        (render mGameState))
+
+	; Update Game State
+	(defn display [glAutoDrawable]
+		(->> mGameState 
+			(update)
+			(render)
+			(reset! mGameState)))
     
     (defn reshape [glAutoDrawable] 
         ())
