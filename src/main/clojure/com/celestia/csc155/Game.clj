@@ -1,24 +1,24 @@
 
-(ns game
-	(:gen-class))
+(ns com.celestia.csc155.game
+  (:gen-class))
 	
 (defrecord Game [mFrame glCanvas]
-	GLEventListener
+  GLEventListener
 	
-	(init [glAutoDrawable]
-		(let [gl (.getGL glAutoDrawable)]
-			(-> gl
-				()))) ; ...
-	
-	(display [glAutoDrawable]
-		(let [gl (.getGL glAutoDrawable)]
-			())))
-	
-	(reshape [glAutoDrawable]
-		(let [gl (.getGL glAutoDrawable)]
-			()))
-	
-	(dispose [glAutoDrawable]
-		(let [gl (.getGL glAutoDrawable)]
-			())))
+  (init [glAutoDrawable]
+        (let [gl (.getGL glAutoDrawable)]
+          (-> gl
+              ()))) 
+  
+  (display [glAutoDrawable]
+           (let [gl (.getGL glAutoDrawable)]
+             ()))
+
+  (reshape [glAutoDrawable]
+           (let [gl (.getGL glAutoDrawable)]
+             ()))
+
+  (dispose [glAutoDrawable]
+           (let [gl (.getGL glAutoDrawable)]
+             ())))
 
