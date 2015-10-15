@@ -1,7 +1,10 @@
 
 (ns main-ns
-	(:gen-class))
+	(:gen-class)
+	(:require [init :refer :all]))
 
+(require '[render :refer :all])
+(require '[update :as u])
 
 ;(import javax.swing.JFrame)
 ;(import com.jogamp.opengl.awt.GLCanvas)
@@ -13,12 +16,8 @@
 ;(def glEventHandler (GLEventHandler.)) 
 
 (defn main [& args] 
-	(println "Blah some more"))
-
-;(defn init []
-	;(println "Test"))
-    ;(.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
-    ;(.addComponent (.getContentPane frame) glCanvas)
-    ;(.setEventListener glCanvas glEventHandler)
-    ;(.setAnimator glCanvas fpsAnimator))
+	(println "Blah some more")
+	(init)
+	(render)
+	(u/update))
 

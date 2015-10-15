@@ -2,4 +2,7 @@
 (ns update
   (:gen-class))
 
-(defprotocol update class (update [this mGameObject]))
+;(defprotocol update (update [this mGameObject]))
+
+(defn update []
+	(println "Updating!"))

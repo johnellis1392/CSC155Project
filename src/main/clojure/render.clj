@@ -1,6 +1,8 @@
 
-(ns render 
+(ns render
   (:gen-class))
 
-(defprotocol render class (render [this glAutoDrawable mGameObject]))
+;(defprotocol render (render [this glAutoDrawable mGameObject]))
 
+(defn render []
+	(println "Rendering"))

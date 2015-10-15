@@ -2,7 +2,7 @@
 (ns init 
   (:gen-class))
 
-(defprotocol init (init [this]))
+;(defprotocol init (init [this]))
 
 (defn init []
   (println "Hello, World!"))

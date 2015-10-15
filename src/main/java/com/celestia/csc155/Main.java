@@ -20,8 +20,12 @@ public class Main {
 //    		IFn function = Clojure.var("com.celestia.main", "test");
     		
     		// GOT IT TO WORK WOOO
+    		RT.loadResourceScript("src/main/clojure/init.clj");
     		RT.loadResourceScript("src/main/clojure/main.clj");
+    		RT.loadResourceScript("src/main/clojure/render.clj");
+    		RT.loadResourceScript("src/main/clojure/update.clj");
     		require.invoke(Clojure.read("main-ns"));
+//    		require.invoke(Clojure.read("init"));
     		IFn function = Clojure.var("main-ns", "main");
 	    	function.invoke();
 		} catch (FileNotFoundException e) {
