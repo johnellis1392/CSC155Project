@@ -12,7 +12,8 @@ import clojure.lang.Compiler;
 
 public class Main {
     public static void main(String[] args) {
-        new MainFrame();
+    	
+//        new MainFrame();
     	/*try {
     		String temp = "(ns init (:gen-class))(defn init [] (println \"Hello, World!\"))";
 //			Compiler.load(new FileReader("src/main/clojure/com/celestia/csc155/init/init.clj"));
