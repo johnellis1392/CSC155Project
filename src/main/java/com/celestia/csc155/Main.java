@@ -12,23 +12,23 @@ import clojure.lang.Compiler;
 
 public class Main {
     public static void main(String[] args) {
-    	
 //        new MainFrame();
-    	/*try {
-    		String temp = "(ns init (:gen-class))(defn init [] (println \"Hello, World!\"))";
-//			Compiler.load(new FileReader("src/main/clojure/com/celestia/csc155/init/init.clj"));
-//    		Clojure.load(new StringReader(temp));
-    		RT.loadResourceScript("src/main/clojure/com/celestia/csc155/init/init.clj");
-	    	Var test = RT.var("init", "t");
-	    	Var init = RT.var("init", "init");
-	    	init.call();
-	    	Object result = test.invoke();
-	    	System.out.println(result);
+    	try {
+    		IFn require = Clojure.var("clojure.core", "require");
+//    		RT.loadResourceScript("src/main/clojure/com/celestia/main.clj");
+//    		require.invoke(Clojure.read("com.celestia.main"));
+//    		IFn function = Clojure.var("com.celestia.main", "test");
+    		
+    		// GOT IT TO WORK WOOO
+    		RT.loadResourceScript("src/main/clojure/main.clj");
+    		require.invoke(Clojure.read("main-ns"));
+    		IFn function = Clojure.var("main-ns", "main");
+	    	function.invoke();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-                        }*/
+        }
     }
 }
 
