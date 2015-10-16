@@ -1,5 +1,5 @@
-#version 210
-//#version 430
+//#version 210
+#version 430
 
 //in vec3 position;
 //in vec4 varyingColor;

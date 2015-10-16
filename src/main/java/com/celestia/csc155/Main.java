@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
+import javax.script.*;
+
 import clojure.java.api.Clojure;
 import clojure.lang.*;
 import clojure.lang.Compiler;
@@ -24,15 +26,20 @@ public class Main {
     		RT.loadResourceScript("src/main/clojure/main.clj");
     		RT.loadResourceScript("src/main/clojure/render.clj");
     		RT.loadResourceScript("src/main/clojure/update.clj");
+    		RT.loadResourceScript("src/main/clojure/util.clj");
+    		RT.loadResourceScript("src/main/clojure/models.clj");
     		require.invoke(Clojure.read("main-ns"));
 //    		require.invoke(Clojure.read("init"));
     		IFn function = Clojure.var("main-ns", "main");
 	    	function.invoke();
-		} catch (FileNotFoundException e) {
+	    	
+//	    	ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+//	    	ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("jruby");
+//	    	scriptEngine.eval("puts 'Hello, World!'");
+	    	
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-        }
+		} 
     }
 }
 
