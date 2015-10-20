@@ -1,7 +1,11 @@
 
 project
+
 target/config-classes
+
 target/resolution-cache
+
 target/streams
-target
+
 .idea
+.project

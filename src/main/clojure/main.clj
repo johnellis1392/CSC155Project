@@ -2,10 +2,12 @@
 (ns main-ns
 	(:gen-class))
 
-(require '[init :refer :all])
-(require '[render :refer :all])
-(require '[update :as u])
+;(require '[init :refer :all])
+;(require '[render :refer :all])
+;(require '[update :as u])
+
 (require '[util :refer :all])
+(require '[models :refer :all])
 
 
 (import javax.swing.JFrame)
@@ -22,7 +24,8 @@
 (def fps 60)
 (def frame (JFrame.)) 
 (def glCanvas (GLCanvas.)) 
-(def glEventHandler (->GLEventHandler))
+(def gameState [])
+(def glEventHandler (->GLEventHandler gameState))
 (def glCanvas (GLCanvas.))
 (def fpsAnimator (FPSAnimator. glCanvas fps))
  
@@ -46,8 +49,15 @@
 ; ;;;;;;;;;;;;;;;;;;;;
 ; Initialize Scripts
 (defn init-scripts []
-	(add-script "src/main/res/ruby/main.rb"))
+  (add-script "src/main/res/ruby/main.rb"))
 
+
+; ;;;;;;;;;;;;;;;;;;;;
+; Initialize Shaders
+;(defn init-shaders [glAutoDrawable]
+;  (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
+;  (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
+;  (compile-shaders glAutoDrawable))
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
