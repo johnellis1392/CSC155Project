@@ -14,7 +14,8 @@
 (import com.jogamp.opengl.GLAutoDrawable)
 (import java.nio.IntBuffer)
 
-;(import com.celestia.csc155.factories.GLProgramBuilder)
+(require '[models :refer :all])
+(require '[main :refer :all])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -101,9 +102,9 @@
            (let [shaderSource (GLSLUtils/readShaderSource (:path shader))
                  shaderLineCounts (map #(.length %) shaderSource)
                  shaderLines (count shaderSource)]
-             {:shaderSource shaderSource
-              :shaderLineCounts shaderLineCounts
-              :shaderLines shaderLines
+             {:source shaderSource
+              :line-counts shaderLineCounts
+              :lines shaderLines
               :type (:type shader)}))
          shaders)]
     
@@ -111,11 +112,11 @@
       "Iterate through shaders and link"
       (let [shaderId (.glCreateShader gl (:type shader))]
         (.glShaderSource gl shaderId
-                         (:shaderLines shader)
-                         (:shaderSource shader)
+                         (:lines shader)
+                         (:source shader)
                          (IntBuffer/wrap
                           (int-array
-                           (:shaderLineCounts shader))))
+                           (:line-counts shader))))
         (.glCompileShader gl shaderId)
         (print-shader-error glAutoDrawable shaderId)
         (.glAttachShader gl programId shaderId)
@@ -132,14 +133,20 @@
 (def VAO (int-array [0]))
 (def VBO (int-array [0]))
 
+;(def gameState {})
 
-(defrecord GLEventHandler [GameState]
+
+(defrecord GLEventHandler [gs]
   GLEventListener
   
   ; Initialize Game World
   (init
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)]
+     ;(def gameState _gameState)
+     (init (-> gameState :camera) glAutoDrawable)
+     (map #(init % glAutoDrawable) (-> gameState :gameWorld))
+     
      (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
      (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
      (def programId (compile-shaders glAutoDrawable))))
@@ -151,6 +158,9 @@
    (let [gl (.getGL glAutoDrawable)]
      (.glUseProgram gl programId)
      (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
+     (def gameState
+       {:camera (update (-> gameState :camera) 0)
+        :gameWorld (map #(update % 0) (-> gameState :gameWorld))})
      (run-scripts glAutoDrawable)))
   
   

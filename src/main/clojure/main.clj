@@ -19,11 +19,13 @@
 (def fps 60)
 (def frame (JFrame.)) 
 (def glCanvas (GLCanvas.)) 
-(def gameState [])
-(def glEventHandler (->GLEventHandler gameState))
 (def glCanvas (GLCanvas.))
 (def fpsAnimator (FPSAnimator. glCanvas fps))
- 
+
+(def gameState
+  {:camera (->Camera 0 0 0)
+   :gameWorld [(->Triangle 0 0 0)]})
+(def glEventHandler (->GLEventHandler gameState))
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
@@ -46,13 +48,6 @@
 (defn init-scripts []
   (add-script "src/main/res/ruby/main.rb"))
 
-
-; ;;;;;;;;;;;;;;;;;;;;
-; Initialize Shaders
-;(defn init-shaders [glAutoDrawable]
-;  (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
-;  (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
-;  (compile-shaders glAutoDrawable))
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
