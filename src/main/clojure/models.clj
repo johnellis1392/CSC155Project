@@ -1,6 +1,6 @@
 
 (ns models
-	(:gen-class))
+  (:gen-class))
 	
 (defprotocol IInit (init [this glAutoDrawable]))
 (defprotocol IUpdate (update [this time]))
@@ -10,19 +10,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Generic Triangle
 (defrecord Triangle [position rotation scale]
-	IUpdate
-	IRender
-	IInit
-	(init [this glAutoDrawable]
-		(let [gl (.getGl glAutoDrawable)]
-			this))
+  IUpdate
+  IRender
+  IInit
+  (init [this glAutoDrawable]
+        (let [gl (.getGl glAutoDrawable)]
+          this))
 		
-	(update [this time]
-		this)
+  (update [this time]
+          this)
 		
-	(render [this glAutoDrawable]
-		(let [gl (.getGL glAutoDrawable)]
-			this))) 
+  (render [this glAutoDrawable]
+          (let [gl (.getGL glAutoDrawable)]
+            this))) 
 
 
 

@@ -1,14 +1,9 @@
 
 (ns main-ns
-	(:gen-class))
-
-;(require '[init :refer :all])
-;(require '[render :refer :all])
-;(require '[update :as u])
+  (:gen-class))
 
 (require '[util :refer :all])
 (require '[models :refer :all])
-
 
 (import javax.swing.JFrame)
 (import com.jogamp.opengl.awt.GLCanvas)
@@ -34,15 +29,15 @@
 ; ;;;;;;;;;;;;;;;;;;;;
 ; Initialize JFrame
 (defn initialize-frame [frame]
-	(-> frame (.getContentPane) (.add glCanvas))
-	(.setTitle frame title)
-	(.setSize frame width height)
-	(.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
-	(.setLocationRelativeTo frame nil)
-	(.addGLEventListener glCanvas glEventHandler)
-	(.setAnimator glCanvas fpsAnimator)
-	(.setVisible frame true)
-	(.start fpsAnimator))
+  (-> frame (.getContentPane) (.add glCanvas))
+  (.setTitle frame title)
+  (.setSize frame width height)
+  (.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
+  (.setLocationRelativeTo frame nil)
+  (.addGLEventListener glCanvas glEventHandler)
+  (.setAnimator glCanvas fpsAnimator)
+  (.setVisible frame true)
+  (.start fpsAnimator))
 
 
 
@@ -63,8 +58,8 @@
 ; ;;;;;;;;;;;;;;;;;;;;
 ; Main
 (defn main [& args]
-	(init-scripts)
-	(initialize-frame frame))
+  (init-scripts)
+  (initialize-frame frame))
 
 
 

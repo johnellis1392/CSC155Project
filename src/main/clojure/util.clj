@@ -1,6 +1,6 @@
 
 (ns util
-	(:gen-class))
+  (:gen-class))
 	
 (import com.jogamp.opengl.GLEventListener)
 (import javax.script.ScriptEngineManager)
@@ -12,6 +12,7 @@
 (import graphicslib3D.GLSLUtils)
 (import com.jogamp.opengl.GL4)
 (import com.jogamp.opengl.GLAutoDrawable)
+(import java.nio.IntBuffer)
 
 ;(import com.celestia.csc155.factories.GLProgramBuilder)
 
@@ -26,26 +27,31 @@
 
 ; Add script to collection
 (defn add-script [path]
-	(def scripts (conj scripts path)))
+  (def scripts (conj scripts path)))
 	
 
 ; Run all scripts in collection
 (defn run-scripts [glAutoDrawable]
-	(let [bindings (-> scriptEngine (.getBindings ScriptContext/ENGINE_SCOPE))
-		  gl (.getGL glAutoDrawable)] 
-		(.put bindings "gl" gl)
-		(.put bindings "GL_DEPTH_BUFFER_BIT" GL4/GL_DEPTH_BUFFER_BIT)
-		(.put bindings "GL_TRIANGLES" GL4/GL_TRIANGLES)
-		(.put bindings "GL_COLOR" GL4/GL_COLOR)
-		;(.eval scriptEngine "puts 'Hello, World!'")))
-		(doseq [script scripts]
-			(.eval scriptEngine (FileReader. script)))))
+  (let [bindings (-> scriptEngine (.getBindings ScriptContext/ENGINE_SCOPE))
+        gl (.getGL glAutoDrawable)] 
+    (.put bindings "gl" gl)
+    (.put bindings "GL_DEPTH_BUFFER_BIT" GL4/GL_DEPTH_BUFFER_BIT)
+    (.put bindings "GL_TRIANGLES" GL4/GL_TRIANGLES)
+    (.put bindings "GL_COLOR" GL4/GL_COLOR)
+
+    (doseq [script scripts]
+      (try 
+        (.eval scriptEngine (FileReader. script))
+        (catch Exception e
+          (str "Exception Thrown: " (.getMessage e)))))))
+
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Functions for compiling shaders
 
+(def programId 0)
 (def shaders [])
 
 ; Add shader to collection
@@ -56,36 +62,68 @@
        :type shader-type})))
 
 
-
-; Compile all shaders
-(defn compile-shaders [glAutoDrawable] 
+(defn print-shader-error [glAutoDrawable shaderId]
+  "Print any GL Shader Compilation Errors that may have occurred"
   (let [gl (.getGL glAutoDrawable)
-  		compileStatus (int-array 1)
-  		linkStatus (int-array 1)
-  		programId (.glCreateProgram gl)
-  		
-  		shaderData 
-  		  (map 
-  		    (fn [shader] 
-  		      (let [shaderSource (GLSLUtils/readShaderSource (:path shader))
-  		  			shaderLineCounts (map #(.length %) shaderSource)
-  		  			shaderLines (count shaderSource)]
-  		  	    {:shaderSource shaderSource
-  		  	     :shaderLineCounts shaderLineCounts
-  		  	     :shaderLines shaderLines})) shaders)]
-  		
-  	; Iterate through shaders and link  	    
-  	(doseq [shader shaderData]
-      (let [shaderId (.glCreateShader gl (:type shader))]
-        (.glShaderSource gl shaderId (:shaderLines shader) (:shaderSource shader) (:shaderLineCounts shader))
-        (.glCompileShader shaderId)
-        (GLSLUtils/printOpenGLError glAutoDrawable)
-        (.glAttachShader gl programId shaderId)
-        (.glDeleteShader shaderId)))
+        compile-status (int-array [0])]
+    (GLSLUtils/printOpenGLError glAutoDrawable)
+    (.glGetShaderiv gl shaderId GL4/GL_COMPILE_STATUS compile-status 0)
+    (if (= 1 (first compile-status))
+      (println "Shader Compiled Successfully.")
+      (do
+        (println "Shader Compilation Failed.")
+        (GLSLUtils/printShaderInfoLog glAutoDrawable shaderId)))))
+
+
+(defn print-program-error [glAutoDrawable programId]
+  "Print any GL Program Linking Errors that may have occurred"
+  (let [gl (.getGL glAutoDrawable)
+        link-status (int-array [0])]
+    (GLSLUtils/printOpenGLError glAutoDrawable)
+    (.glGetProgramiv gl programId GL4/GL_LINK_STATUS link-status 0)
+    (if (= 1 (first link-status))
+      (println "Linking Successful.")
+      (do
+        (println "Linking Failed.")
+        (GLSLUtils/printProgramInfoLog glAutoDrawable programId)))))
+
+
+(defn compile-shaders [glAutoDrawable]
+  "Compile all shaders" 
+  (let [gl (.getGL glAutoDrawable)
+        compileStatus (int-array 1)
+        linkStatus (int-array 1)
+        programId (.glCreateProgram gl)
         
-    ; Finally link program
-    (.glLinkProgram programId)
-    (GLSLUtils/printOpenGLError glAutoDrawable)))
+        shaderData 
+        (map 
+         (fn [shader] 
+           (let [shaderSource (GLSLUtils/readShaderSource (:path shader))
+                 shaderLineCounts (map #(.length %) shaderSource)
+                 shaderLines (count shaderSource)]
+             {:shaderSource shaderSource
+              :shaderLineCounts shaderLineCounts
+              :shaderLines shaderLines
+              :type (:type shader)}))
+         shaders)]
+    
+    (doseq [shader shaderData]
+      "Iterate through shaders and link"
+      (let [shaderId (.glCreateShader gl (:type shader))]
+        (.glShaderSource gl shaderId
+                         (:shaderLines shader)
+                         (:shaderSource shader)
+                         (IntBuffer/wrap
+                          (int-array
+                           (:shaderLineCounts shader))))
+        (.glCompileShader gl shaderId)
+        (print-shader-error glAutoDrawable shaderId)
+        (.glAttachShader gl programId shaderId)
+        (.glDeleteShader gl shaderId)))
+        
+    (.glLinkProgram gl programId)
+    (print-program-error glAutoDrawable programId)
+    programId))
 
 
 
@@ -97,60 +135,36 @@
 
 (defrecord GLEventHandler [GameState]
   GLEventListener
-
-  ; Initialize Game World
-  (init [this glAutoDrawable]
-    (let [gl (.getGL glAutoDrawable)]
-      (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
-      (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
-      (compile-shaders glAutoDrawable)))
-      
-      ;(.glGenVertexArrays gl (.length VAO) VAO 0)
-      ;(.glBindVertexArrays gl (get VAO 0))
-      ;(.glGenBuffers gl (.length VBO) VBO 0)
-		
-      ;(.glBindBuffers gl GL4/GL_ARRAY_BUFFER (get VBO 0))
-      ;()
-      ;()))
-
   
+  ; Initialize Game World
+  (init
+   [this glAutoDrawable]
+   (let [gl (.getGL glAutoDrawable)]
+     (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
+     (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
+     (def programId (compile-shaders glAutoDrawable))))
+  
+
   ; Update game world and Render
-  (display [this glAutoDrawable]
-    (let [gl (.getGL glAutoDrawable)]
-      (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
-      (try 
-        (run-scripts glAutoDrawable)
-        (catch Exception e
-          (str "Exception Thrown: " (.getMessage e))))))
-	
-	
-  (reshape [this glAutoDrawable x y w h]
-    (let [gl (.getGL glAutoDrawable)]
-      gl))
-	
-		
-  (dispose [this glAutoDrawable]
-    (let [gl (.getGL glAutoDrawable)]
-      gl)))
+  (display
+   [this glAutoDrawable]
+   (let [gl (.getGL glAutoDrawable)]
+     (.glUseProgram gl programId)
+     (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
+     (run-scripts glAutoDrawable)))
+  
+  
+  ; Reshape the view screen
+  (reshape
+   [this glAutoDrawable x y w h]
+   (let [gl (.getGL glAutoDrawable)]
+     gl))
+  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  ; Dispose all graphics objects
+  (dispose
+   [this glAutoDrawable]
+   (let [gl (.getGL glAutoDrawable)]
+     gl)))
 
 

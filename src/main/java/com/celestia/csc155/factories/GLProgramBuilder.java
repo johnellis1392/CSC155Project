@@ -84,7 +84,7 @@ public class GLProgramBuilder implements IGLProgramBuilder {
         GLSLUtils.printOpenGLError(glAutoDrawable);
         gl.glGetProgramiv(programId, GL4.GL_LINK_STATUS, linkStatus, 0);
         if(linkStatus[0] == 1) {
-        	System.out.println("Link success");
+            System.out.println("Link success");
         } else {
         	System.out.println("Link failed");
         	GLSLUtils.printProgramInfoLog(glAutoDrawable, programId);
