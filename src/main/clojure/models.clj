@@ -1,9 +1,9 @@
 
-(ns models
-  (:gen-class))
+(ns models)
+  ;(:gen-class))
 	
 (defprotocol IInit (init [this glAutoDrawable]))
-(defprotocol IUpdate (update [this time]))
+(defprotocol IUpdate (-update [this time]))
 (defprotocol IRender (render [this glAutoDrawable]))
 
 
@@ -19,9 +19,8 @@
    (let [gl (.getGl glAutoDrawable)]
      this))
 		
-  (update
+  (-update
    [this time]
-   (println "Camera: " (:position this) (:rotation this) (:zoom this))
    this)
 		
   (render
@@ -42,39 +41,13 @@
    "Initialize the Camera object"
    this)
 
-  (update
-   [this glAutoDrawable]
-   "Update the Camera Position"
-   (println "Camera: " (:position this) (:rotation this) (:zoom this))
+  (-update
+   [this time]
    this)
 
   (render
    [this glAutoDrawable]
    "Render the Camera???"
    this))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-; Game State object for holding current game world
-;(defrecord GameState [camera gameWorld]
-;  IUpdate
-;  IRender
-;  IInit
-;  
-;  (init
-;   [this glAutoDrawable]
-;   (doseq [gameObject (:gameWorld this)]
-;     (init gameObject)))
-;    
-;  (update
-;   [this time]
-;   (->GameState 
-;    :camera (:camera this) 
-;    :gameWorld (map update (:gameWorld this))))
-;  	
-;  (render
-;   [this glAutoDrawable]
-;   (doseq [gameObject (:gameObject this)]
-;     (render gameObject))))
 
 

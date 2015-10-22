@@ -1,9 +1,7 @@
 
 (ns main-ns
-  (:gen-class))
-
-(require '[util :refer :all])
-(require '[models :refer :all])
+  (:require [util :as util]
+            [models :as models]))
 
 (import javax.swing.JFrame)
 (import com.jogamp.opengl.awt.GLCanvas)
@@ -17,15 +15,9 @@
 (def width 1000)
 (def height (/ width aspect))
 (def fps 60)
-(def frame (JFrame.)) 
+(def frame (JFrame.))
 (def glCanvas (GLCanvas.)) 
-(def glCanvas (GLCanvas.))
 (def fpsAnimator (FPSAnimator. glCanvas fps))
-
-(def gameState
-  {:camera (->Camera 0 0 0)
-   :gameWorld [(->Triangle 0 0 0)]})
-(def glEventHandler (->GLEventHandler gameState))
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
@@ -36,25 +28,29 @@
   (.setSize frame width height)
   (.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
   (.setLocationRelativeTo frame nil)
-  (.addGLEventListener glCanvas glEventHandler)
-  (.setAnimator glCanvas fpsAnimator)
-  (.setVisible frame true)
-  (.start fpsAnimator))
+  (.setVisible frame true))
 
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
 ; Initialize Scripts
 (defn init-scripts []
-  (add-script "src/main/res/ruby/main.rb"))
+  (util/add-script "src/main/res/ruby/main.rb"))
 
 
 
 ; ;;;;;;;;;;;;;;;;;;;;
 ; Main
 (defn main [& args]
-  (init-scripts)
-  (initialize-frame frame))
+  (let [gameState
+        {:camera (models/->Camera 0 0 0)
+         :gameWorld [(models/->Triangle 0 0 0)]}
+        glEventHandler (util/->GLEventHandler gameState)]
+    (init-scripts)
+    (initialize-frame frame)
+    (.addGLEventListener glCanvas glEventHandler)
+    (.setAnimator glCanvas fpsAnimator)
+    (.start fpsAnimator)))
 
 
 

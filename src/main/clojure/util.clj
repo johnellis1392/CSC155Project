@@ -1,6 +1,7 @@
 
 (ns util
-  (:gen-class))
+  ;(:gen-class)
+  (:require [models :refer :all]))
 	
 (import com.jogamp.opengl.GLEventListener)
 (import javax.script.ScriptEngineManager)
@@ -13,10 +14,6 @@
 (import com.jogamp.opengl.GL4)
 (import com.jogamp.opengl.GLAutoDrawable)
 (import java.nio.IntBuffer)
-
-(require '[models :refer :all])
-(require '[main :refer :all])
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Functions for adding scripts
@@ -32,10 +29,11 @@
 	
 
 ; Run all scripts in collection
-(defn run-scripts [glAutoDrawable]
+(defn run-scripts [glAutoDrawable gameState]
   (let [bindings (-> scriptEngine (.getBindings ScriptContext/ENGINE_SCOPE))
         gl (.getGL glAutoDrawable)] 
     (.put bindings "gl" gl)
+    (.put bindings "gameState" gameState)
     (.put bindings "GL_DEPTH_BUFFER_BIT" GL4/GL_DEPTH_BUFFER_BIT)
     (.put bindings "GL_TRIANGLES" GL4/GL_TRIANGLES)
     (.put bindings "GL_COLOR" GL4/GL_COLOR)
@@ -132,19 +130,18 @@
 ; GL Event Handler Object
 (def VAO (int-array [0]))
 (def VBO (int-array [0]))
+(def gameState [])
 
-;(def gameState {})
 
-
-(defrecord GLEventHandler [gs]
+(defrecord GLEventHandler [mGameState]
   GLEventListener
   
   ; Initialize Game World
   (init
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)]
-     ;(def gameState _gameState)
-     (init (-> gameState :camera) glAutoDrawable)
+     (def gameState mGameState)
+     (-> gameState :camera (init glAutoDrawable))
      (map #(init % glAutoDrawable) (-> gameState :gameWorld))
      
      (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
@@ -159,9 +156,9 @@
      (.glUseProgram gl programId)
      (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
      (def gameState
-       {:camera (update (-> gameState :camera) 0)
-        :gameWorld (map #(update % 0) (-> gameState :gameWorld))})
-     (run-scripts glAutoDrawable)))
+       {:camera (models/-update (-> gameState :camera) 1)
+        :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})
+     (run-scripts glAutoDrawable gameState)))
   
   
   ; Reshape the view screen
@@ -176,5 +173,4 @@
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)]
      gl)))
-
 

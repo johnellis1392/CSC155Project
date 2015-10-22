@@ -16,7 +16,7 @@ import clojure.lang.Compiler;
 public class Main {
     public static void main(String[] args) {
     	try {
-            IFn require = Clojure.var("clojure.core", "require");
+            //IFn require = Clojure.var("clojure.core", "require");
             RT.loadResourceScript("src/main/clojure/main.clj");
             RT.loadResourceScript("src/main/clojure/util.clj");
             RT.loadResourceScript("src/main/clojure/models.clj");

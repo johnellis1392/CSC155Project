@@ -26,6 +26,26 @@ end
 
 $gl.glClear($GL_DEPTH_BUFFER_BIT)
 
+#puts $gameState
+#$gameState.each {|i| puts i}
+#puts camera: $gameState
+#puts ''
+
+#puts gameWorld: $gameState
+#puts ''
+
+#puts $gameState.inspect
+#puts ''
+#$gameState.each {|k, v|
+#  puts k
+#  puts v.inspect
+#  puts ''
+#}
+
+#puts gameWorld: $gameState 
+#(gameWorld: $gameState).each {|i|}
+#puts 'GameState: ' + $gameState.camera.position + ", " + $gameState.camera.rotation
+
 # Set background color
 background = FloatBuffer.allocate(4)
 #background.put(0, Math.sin(System.currentTimeMillis()) * 0.05 + 1)
