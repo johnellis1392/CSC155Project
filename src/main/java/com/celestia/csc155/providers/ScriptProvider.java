@@ -20,17 +20,18 @@ public class ScriptProvider implements IScriptProvider {
 	public static final String engine = "jruby";
     private final ArrayList<String> scripts;
 
+    
 
     @Override
-    public void eval (GLAutoDrawable glAutoDrawable)
+    public void eval (final GLAutoDrawable glAutoDrawable)
         throws FileNotFoundException, ScriptException {
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine ruby = scriptEngineManager.getEngineByName(engine);
-        Bindings bindings = ruby.getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("gl", (GL4) glAutoDrawable.getGL());
-        bindings.put("GL_DEPTH_BUFFER_BIT", GL4.GL_DEPTH_BUFFER_BIT);
-        bindings.put("GL_TRIANGLES", GL4.GL_TRIANGLES);
-        bindings.put("GL_COLOR", GL4.GL_COLOR); 
+        final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        final ScriptEngine ruby = scriptEngineManager.getEngineByName(engine);
+//        Bindings bindings = ruby.getBindings(ScriptContext.ENGINE_SCOPE);
+//        bindings.put("gl", (GL4) glAutoDrawable.getGL());
+//        bindings.put("GL_DEPTH_BUFFER_BIT", GL4.GL_DEPTH_BUFFER_BIT);
+//        bindings.put("GL_TRIANGLES", GL4.GL_TRIANGLES);
+//        bindings.put("GL_COLOR", GL4.GL_COLOR); 
         
         for(String script : scripts) {
             FileReader fileReader = new FileReader(script);
@@ -43,7 +44,7 @@ public class ScriptProvider implements IScriptProvider {
      * Evaluate all scripts in collection
      */
     @SuppressWarnings("restriction")
-	public void eval(GameState gameState) 
+	public void eval(final GameState gameState) 
     		throws FileNotFoundException, ScriptException {
     	
     	ScriptEngineManager scriptEngineManager = new ScriptEngineManager();

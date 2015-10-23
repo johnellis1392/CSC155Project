@@ -11,9 +11,34 @@
 
 (import java.io.FileReader)
 (import graphicslib3D.GLSLUtils)
+(import graphicslib3D.Matrix3D)
 (import com.jogamp.opengl.GL4)
 (import com.jogamp.opengl.GLAutoDrawable)
 (import java.nio.IntBuffer)
+(import java.nio.FloatBuffer)
+
+; Global Variables
+(def VAO (int-array [0]))
+(def VBO (int-array [0]))
+(def gameState [])
+
+
+
+
+(def vertex_position [-0.25   0.25  -0.25  -0.25  -0.25  -0.25  0.25  -0.25  -0.25 
+             	0.25  -0.25  -0.25  0.25   0.25  -0.25  -0.25   0.25  -0.25 
+             	0.25  -0.25  -0.25  0.25  -0.25   0.25  0.25   0.25  -0.25 
+             	0.25  -0.25   0.25  0.25   0.25   0.25  0.25   0.25  -0.25 
+             	0.25  -0.25   0.25  -0.25  -0.25   0.25  0.25   0.25   0.25 
+            	-0.25  -0.25   0.25  -0.25   0.25   0.25  0.25   0.25   0.25 
+            	-0.25  -0.25   0.25  -0.25  -0.25  -0.25  -0.25   0.25   0.25 
+            	-0.25  -0.25  -0.25  -0.25   0.25  -0.25  -0.25   0.25   0.25 
+            	-0.25  -0.25   0.25   0.25  -0.25   0.25   0.25  -0.25  -0.25 
+             	0.25  -0.25  -0.25  -0.25  -0.25  -0.25  -0.25  -0.25   0.25 
+		        -0.25   0.25  -0.25  0.25   0.25  -0.25  0.25   0.25   0.25 
+             	0.25   0.25   0.25  -0.25   0.25   0.25  -0.25   0.25  -0.25])
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Functions for adding scripts
@@ -34,15 +59,42 @@
         gl (.getGL glAutoDrawable)] 
     (.put bindings "gl" gl)
     (.put bindings "gameState" gameState)
+    (.put bindings "VAO" VAO)
+    (.put bindings "VBO" VBO)
     (.put bindings "GL_DEPTH_BUFFER_BIT" GL4/GL_DEPTH_BUFFER_BIT)
     (.put bindings "GL_TRIANGLES" GL4/GL_TRIANGLES)
     (.put bindings "GL_COLOR" GL4/GL_COLOR)
+    (.put bindings "GL_ARRAY_BUFFER" GL4/GL_ARRAY_BUFFER)
+    
+    (.put bindings "test_array" [1 2 3])
 
     (doseq [script scripts]
       (try 
         (.eval scriptEngine (FileReader. script))
         (catch Exception e
           (str "Exception Thrown: " (.getMessage e)))))))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Matrix transform utilities
+
+; Get Perspective Transform Matrix
+(defn perspective [fov_y aspect n f]
+  (let [q (->> fov_y (* 0.5) Math/toRadians Math/tan (/ 1.0))
+        a (/ q aspect)
+        b (/ (+ n f) (- n f))
+        c (/ (-> f (* n) (* 2.0)) (- n f))
+        r (Matrix3D.)]
+    (.setElementAt r 0 0 a)
+    (.setElementAt r 1 1 q)
+    (.setElementAt r 2 2 b)
+    (.setElementAt r 2 3 -1.0)
+    (.setElementAt r 3 2 c)
+    (let [rt (.transpose r)]
+      rt)))
 
 
 
@@ -74,6 +126,7 @@
         (GLSLUtils/printShaderInfoLog glAutoDrawable shaderId)))))
 
 
+
 (defn print-program-error [glAutoDrawable programId]
   "Print any GL Program Linking Errors that may have occurred"
   (let [gl (.getGL glAutoDrawable)
@@ -85,6 +138,7 @@
       (do
         (println "Linking Failed.")
         (GLSLUtils/printProgramInfoLog glAutoDrawable programId)))))
+
 
 
 (defn compile-shaders [glAutoDrawable]
@@ -119,7 +173,6 @@
         (print-shader-error glAutoDrawable shaderId)
         (.glAttachShader gl programId shaderId)
         (.glDeleteShader gl shaderId)))
-        
     (.glLinkProgram gl programId)
     (print-program-error glAutoDrawable programId)
     programId))
@@ -128,10 +181,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; GL Event Handler Object
-(def VAO (int-array [0]))
-(def VBO (int-array [0]))
-(def gameState [])
-
 
 (defrecord GLEventHandler [mGameState]
   GLEventListener
@@ -139,26 +188,69 @@
   ; Initialize Game World
   (init
    [this glAutoDrawable]
-   (let [gl (.getGL glAutoDrawable)]
+   (let [vertex_buffer (FloatBuffer/wrap vertex_position)
+		 gl (-> glAutoDrawable .getGL)]
      (def gameState mGameState)
-     (-> gameState :camera (init glAutoDrawable))
-     (map #(init % glAutoDrawable) (-> gameState :gameWorld))
      
      (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
      (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
-     (def programId (compile-shaders glAutoDrawable))))
+     (def programId (compile-shaders glAutoDrawable))
+     
+     ; Initialize Vertex Arrays & Buffers
+     (.glGenVertexArrays gl (count VAO) VAO 0)
+     (.glBindVertexArray gl (first VAO))
+     (.glGenBuffers gl (count VBO) VBO 0)
+     
+     (.glBindBuffer gl GL4/GL_ARRAY_BUFFER (first VBO))
+     (.glBufferData gl GL4/GL_ARRAY_BUFFER (-> vertex_buffer .limit (* 4)) vertex_buffer GL4/GL_STATIC_DRAW)
+     
+     
+     (-> gameState :camera (init glAutoDrawable))
+     ;(map #(init % glAutoDrawable) (-> gameState :gameWorld))
+     ))
   
-
+  
+  
   ; Update game world and Render
   (display
    [this glAutoDrawable]
-   (let [gl (.getGL glAutoDrawable)]
-     (.glUseProgram gl programId)
+   (let [gl (.getGL glAutoDrawable)
+         aspect (/ 16.0 9.0)
+         mv_location (.glGetUniformLocation gl programId "mv_matrix")
+         proj_location (.glGetUniformLocation gl programId "proj_location")
+         
+         perspective_matrix (perspective 50.0 aspect 0.1 1000.0)
+         view_matrix (Matrix3D.)
+         model_matrix (Matrix3D.)
+         mv_matrix (Matrix3D.)]
+	
+     ;(def gameState
+     ;  {:camera (models/-update (-> gameState :camera) 1)
+     ;   :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})	
+     (.translate view_matrix 0.0 0.0 -1.0)
+	 (.translate model_matrix 0.0 -0.5 0.0)
+     (.concatenate mv_matrix view_matrix)
+     (.concatenate mv_matrix model_matrix)
+         
      (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
-     (def gameState
-       {:camera (models/-update (-> gameState :camera) 1)
-        :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})
-     (run-scripts glAutoDrawable gameState)))
+     (.glUseProgram gl programId)
+     
+        
+     ;(run-scripts glAutoDrawable gameState)
+     
+     (.glUniformMatrix4fv gl mv_location 1 false (.getFloatValues mv_matrix) 0)
+     (.glUniformMatrix4fv gl proj_location 1 false (.getFloatValues perspective_matrix) 0)
+     
+     (.glBindBuffer gl GL4/GL_ARRAY_BUFFER (first VBO))
+     ;(.glVertexAttribPointer gl 0 3 GL4/GL_FLOAT false 0 0)
+     (.glEnableVertexAttribArray gl 0)
+     (.glEnable gl GL4/GL_CULL_FACE)
+     (.glEnable gl GL4/GL_CW)
+     (.glEnable gl GL4/GL_DEPTH_TEST)
+     (.glEnable gl GL4/GL_LEQUAL)
+     
+     (.glDrawArrays gl GL4/GL_TRIANGLES 0 1)))
+  
   
   
   ; Reshape the view screen
@@ -167,10 +259,39 @@
    (let [gl (.getGL glAutoDrawable)]
      gl))
   
+  
 
   ; Dispose all graphics objects
   (dispose
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)]
+   	 ;(.glDeleteVertexArrays gl 1 VAO)
+     ;(.glDeleteProgram gl programId)
      gl)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

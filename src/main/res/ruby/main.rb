@@ -1,62 +1,16 @@
 
-import java.nio.FloatBuffer 
-import java.lang.System
-#import graphicslib3D.Matrix3D
 
-require 'java'
-$CLASSPATH << 'lib/graphicslib3D'
-#require 'graphicslib3D'
+java_import com.jogamp.opengl.GL4
 
+$gl.glBindBuffer(GL4::GL_ARRAY_BUFFER, $VBO[0]);
+$gl.glVertexAttribPointer(0, 3, GL4::GL_FLOAT, false, 0, 0);
+$gl.glEnableVertexAttribArray(0);
 
-# Triangle class for storing position data
-class Triangle
-  def initialize(position, rotation, scale)
-    @position = position
-    @rotation = rotation
-    @scale = scale
-  end
-  
-  def initialize(data)
-    @position = data.position
-    @rotation = data.rotation
-    @scale = data.scale
-  end
-end
+$gl.glEnable(GL4::GL_CULL_FACE);
+$gl.glFrontFace(GL4::GL_CW);
+$gl.glEnable(GL4::GL_DEPTH_TEST);
+$gl.glDepthFunc(GL4::GL_LEQUAL);
 
-
-$gl.glClear($GL_DEPTH_BUFFER_BIT)
-
-#puts $gameState
-#$gameState.each {|i| puts i}
-#puts camera: $gameState
-#puts ''
-
-#puts gameWorld: $gameState
-#puts ''
-
-#puts $gameState.inspect
-#puts ''
-#$gameState.each {|k, v|
-#  puts k
-#  puts v.inspect
-#  puts ''
-#}
-
-#puts gameWorld: $gameState 
-#(gameWorld: $gameState).each {|i|}
-#puts 'GameState: ' + $gameState.camera.position + ", " + $gameState.camera.rotation
-
-# Set background color
-background = FloatBuffer.allocate(4)
-#background.put(0, Math.sin(System.currentTimeMillis()) * 0.05 + 1)
-#background.put(1, Math.cos(System.currentTimeMillis()) * 0.05)
-
-background.put(0, 0.7)
-background.put(1, 0.7)
-background.put(2, 0.9)
-background.put(3, 0.7)
-
-$gl.glClearBufferfv($GL_COLOR, 0, background)
-$gl.glDrawArrays($GL_TRIANGLES, 0, 1)
+$gl.glDrawArrays(GL4::GL_TRIANGLES, 0, 36);
 
 

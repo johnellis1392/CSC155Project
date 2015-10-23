@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
     private final int fps = R.util.fps;
     private final Dimension size = new Dimension(width, height);
 
-//    private final InputHandler inputHandler = new InputHandler();
     private final GLEventListener glEventHandler = new GLEventHandler();
     private final GLCanvas glCanvas = new GLCanvas();
     private final FPSAnimator fpsAnimator = new FPSAnimator(glCanvas, fps);
@@ -31,10 +30,9 @@ public class MainFrame extends JFrame {
         setTitle(R.util.title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(glCanvas);
-//        glEventHandler.setInputHandler(inputHandler);
         glCanvas.addGLEventListener(glEventHandler);
-//        glCanvas.addMouseListener((MouseListener) inputHandler);
-//        glCanvas.addKeyListener((KeyListener) inputHandler);
+        glCanvas.addMouseListener((MouseListener) glEventHandler);
+        glCanvas.addKeyListener((KeyListener) glEventHandler);
         glCanvas.setAnimator(fpsAnimator);
         setSize(size);
         setLocationRelativeTo(null);
