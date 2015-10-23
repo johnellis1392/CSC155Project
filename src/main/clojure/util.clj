@@ -8,14 +8,21 @@
 (import javax.script.ScriptEngine)
 (import javax.script.ScriptContext)
 (import javax.script.Bindings)
-
 (import java.io.FileReader)
+(import java.nio.IntBuffer)
+(import java.nio.FloatBuffer)
+
+(import java.awt.event.MouseListener)
+(import java.awt.event.MouseEvent)
+(import java.awt.event.KeyListener)
+(import java.awt.event.KeyEvent)
+
+
 (import graphicslib3D.GLSLUtils)
 (import graphicslib3D.Matrix3D)
 (import com.jogamp.opengl.GL4)
 (import com.jogamp.opengl.GLAutoDrawable)
-(import java.nio.IntBuffer)
-(import java.nio.FloatBuffer)
+
 
 ; Global Variables
 (def VAO (int-array [0]))
@@ -113,6 +120,7 @@
        :type shader-type})))
 
 
+; Print GL Shader Compilation Error
 (defn print-shader-error [glAutoDrawable shaderId]
   "Print any GL Shader Compilation Errors that may have occurred"
   (let [gl (.getGL glAutoDrawable)
@@ -127,6 +135,7 @@
 
 
 
+; Print GL Program Compilation Error
 (defn print-program-error [glAutoDrawable programId]
   "Print any GL Program Linking Errors that may have occurred"
   (let [gl (.getGL glAutoDrawable)
@@ -141,6 +150,7 @@
 
 
 
+; Compile all shaders in list
 (defn compile-shaders [glAutoDrawable]
   "Compile all shaders" 
   (let [gl (.getGL glAutoDrawable)
@@ -176,6 +186,21 @@
     (.glLinkProgram gl programId)
     (print-program-error glAutoDrawable programId)
     programId))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Functions for dealing with event queue
+(def event-queue [])
+
+; Add a function to the event queue
+(defn enqueue [f]
+  (def event-queue (conj event-queue f)))
+
+; Iterate through all actions in queue and mutate game
+; state 
+(defn eval-events [mGameState]
+  (reduce #(%2 %1) mGameState event-queue))
 
 
 
@@ -222,34 +247,51 @@
          perspective_matrix (perspective 50.0 aspect 0.1 1000.0)
          view_matrix (Matrix3D.)
          model_matrix (Matrix3D.)
-         mv_matrix (Matrix3D.)]
+         mv_matrix (Matrix3D.)
+         background (FloatBuffer/allocate 4)]
 	
      ;(def gameState
      ;  {:camera (models/-update (-> gameState :camera) 1)
-     ;   :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})	
+     ;   :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})
+ 
+     ; Set Matrices
      (.translate view_matrix 0.0 0.0 -1.0)
 	 (.translate model_matrix 0.0 -0.5 0.0)
      (.concatenate mv_matrix view_matrix)
      (.concatenate mv_matrix model_matrix)
-         
+       
+     ; Set background
+     (.put background 0 0.0)
+     (.put background 1 0.0)
+     (.put background 2 0.0)
+     (.put background 3 0.0)
      (.glClear gl GL4/GL_DEPTH_BUFFER_BIT)
+     (.glClearBufferfv gl GL4/GL_COLOR 0 background)
+     
+     ; Set current program
      (.glUseProgram gl programId)
      
-        
+     ; Run Rendering Scripts
      ;(run-scripts glAutoDrawable gameState)
      
+     ; Set Uniform Constants for GL
      (.glUniformMatrix4fv gl mv_location 1 false (.getFloatValues mv_matrix) 0)
      (.glUniformMatrix4fv gl proj_location 1 false (.getFloatValues perspective_matrix) 0)
      
+     ; Bind the vertices to render
      (.glBindBuffer gl GL4/GL_ARRAY_BUFFER (first VBO))
-     ;(.glVertexAttribPointer gl 0 3 GL4/GL_FLOAT false 0 0)
+     (.glVertexAttribPointer gl 0 3 GL4/GL_FLOAT false 0 0)
      (.glEnableVertexAttribArray gl 0)
+     
+     ; Enable GL Rendering Attributes
      (.glEnable gl GL4/GL_CULL_FACE)
      (.glEnable gl GL4/GL_CW)
      (.glEnable gl GL4/GL_DEPTH_TEST)
      (.glEnable gl GL4/GL_LEQUAL)
      
-     (.glDrawArrays gl GL4/GL_TRIANGLES 0 1)))
+     ; Draw objects
+     (.glDrawArrays gl GL4/GL_TRIANGLES 0 (count vertices))
+     ))
   
   
   
@@ -270,6 +312,30 @@
      gl)))
 
 
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Objects for handling user input
+
+; Mouse Event Handler
+(defrecord MouseHandler []
+  MouseListener
+  (mouseEntered [mouseEvent] ())
+  (mouseExited [mouseEvent] ())
+  (mouseClicked [mouseEvent] ())
+  (mousePressed [mouseEvent] ())
+  (mouseReleased [mouseEvent] ()))
+
+
+; Key Event Handler
+(defrecord KeyHandler []
+  KeyListener
+  (keyPressed [keyEvent] ())
+  (keyReleased [keyEvent] ())
+  (keyTyped [keyEvent] ()))
 
 
 
