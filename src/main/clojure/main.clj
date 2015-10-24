@@ -43,12 +43,18 @@
 ; Main
 (defn main [& args]
   (let [gameState
-        {:camera (models/->Camera 0 0 0)
+        {:camera (models/->Camera 0 0 -1 50.0)
          :gameWorld [(models/->Triangle 0 0 0)]}
-        glEventHandler (util/->GLEventHandler gameState)]
+        glEventHandler (util/->GLEventHandler gameState)
+        mouseHandler (util/->MouseHandler)
+        keyHandler (util/->KeyHandler)
+        mouseWheelHandler (util/->MouseWheelHandler)]
     (init-scripts)
     (initialize-frame frame)
     (.addGLEventListener glCanvas glEventHandler)
+    (.addMouseWheelListener glCanvas mouseWheelHandler)
+    (.addMouseListener glCanvas mouseHandler)
+    (.addKeyListener glCanvas keyHandler)
     (.setAnimator glCanvas fpsAnimator)
     (.start fpsAnimator)))
 

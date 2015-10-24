@@ -12,6 +12,8 @@
 (import java.nio.IntBuffer)
 (import java.nio.FloatBuffer)
 
+(import java.awt.event.MouseWheelListener)
+(import java.awt.event.MouseWheelEvent)
 (import java.awt.event.MouseListener)
 (import java.awt.event.MouseEvent)
 (import java.awt.event.KeyListener)
@@ -20,31 +22,97 @@
 
 (import graphicslib3D.GLSLUtils)
 (import graphicslib3D.Matrix3D)
+(import graphicslib3D.Vector3D)
 (import com.jogamp.opengl.GL4)
 (import com.jogamp.opengl.GLAutoDrawable)
 
 
 ; Global Variables
 (def VAO (int-array [0]))
-(def VBO (int-array [0]))
+(def VBO (int-array [0 0]))
 (def gameState [])
 
 
 
 
-(def vertex_position [-0.25   0.25  -0.25  -0.25  -0.25  -0.25  0.25  -0.25  -0.25 
-             	0.25  -0.25  -0.25  0.25   0.25  -0.25  -0.25   0.25  -0.25 
-             	0.25  -0.25  -0.25  0.25  -0.25   0.25  0.25   0.25  -0.25 
-             	0.25  -0.25   0.25  0.25   0.25   0.25  0.25   0.25  -0.25 
-             	0.25  -0.25   0.25  -0.25  -0.25   0.25  0.25   0.25   0.25 
-            	-0.25  -0.25   0.25  -0.25   0.25   0.25  0.25   0.25   0.25 
-            	-0.25  -0.25   0.25  -0.25  -0.25  -0.25  -0.25   0.25   0.25 
-            	-0.25  -0.25  -0.25  -0.25   0.25  -0.25  -0.25   0.25   0.25 
-            	-0.25  -0.25   0.25   0.25  -0.25   0.25   0.25  -0.25  -0.25 
-             	0.25  -0.25  -0.25  -0.25  -0.25  -0.25  -0.25  -0.25   0.25 
-		        -0.25   0.25  -0.25  0.25   0.25  -0.25  0.25   0.25   0.25 
-             	0.25   0.25   0.25  -0.25   0.25   0.25  -0.25   0.25  -0.25])
+(def vertex_position 
+  [-0.25   0.25  -0.25  
+   -0.25  -0.25  -0.25  
+   0.25  -0.25  -0.25 
+   0.25  -0.25  -0.25  
+   0.25   0.25  -0.25  
+   -0.25   0.25  -0.25 
+   0.25  -0.25  -0.25  
+   0.25  -0.25   0.25  
+   0.25   0.25  -0.25 
+   0.25  -0.25   0.25  
+   0.25   0.25   0.25  
+   0.25   0.25  -0.25
+   0.25  -0.25   0.25  
+   -0.25  -0.25   0.25  
+   0.25   0.25   0.25 
+   -0.25  -0.25   0.25  
+   -0.25   0.25   0.25  
+   0.25   0.25   0.25 
+   -0.25  -0.25   0.25  
+   -0.25  -0.25  -0.25  
+   -0.25   0.25   0.25 
+   -0.25  -0.25  -0.25  
+   -0.25   0.25  -0.25  
+   -0.25   0.25   0.25 
+   -0.25  -0.25   0.25   
+   0.25  -0.25   0.25   
+   0.25  -0.25  -0.25 
+   0.25  -0.25  -0.25  
+   -0.25  -0.25  -0.25  
+   -0.25  -0.25   0.25 
+   -0.25   0.25  -0.25  
+   0.25   0.25  -0.25  
+   0.25   0.25   0.25 
+   0.25   0.25   0.25  
+   -0.25   0.25   0.25 
+   -0.25   0.25  -0.25])
 
+
+; Took this color data from a gl tutorial;
+; http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/
+(def vertex_colors 
+   [0.583  0.771  0.014
+    0.609  0.115  0.436
+    0.327  0.483  0.844
+    0.822  0.569  0.201
+    0.435  0.602  0.223
+    0.310  0.747  0.185
+    0.597  0.770  0.761
+    0.559  0.436  0.730
+    0.359  0.583  0.152
+    0.483  0.596  0.789
+    0.559  0.861  0.639
+    0.195  0.548  0.859
+    0.014  0.184  0.576
+    0.771  0.328  0.970
+    0.406  0.615  0.116
+    0.676  0.977  0.133
+    0.971  0.572  0.833
+    0.140  0.616  0.489
+    0.997  0.513  0.064
+    0.945  0.719  0.592
+    0.543  0.021  0.978
+    0.279  0.317  0.505
+    0.167  0.620  0.077
+    0.347  0.857  0.137
+    0.055  0.953  0.042
+    0.714  0.505  0.345
+    0.783  0.290  0.734
+    0.722  0.645  0.174
+    0.302  0.455  0.848
+    0.225  0.587  0.040
+    0.517  0.713  0.338
+    0.053  0.959  0.120
+    0.393  0.621  0.362
+    0.673  0.211  0.457
+    0.820  0.883  0.371
+    0.982  0.099  0.879])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -200,7 +268,7 @@
 ; Iterate through all actions in queue and mutate game
 ; state 
 (defn eval-events [mGameState]
-  (reduce #(%2 %1) mGameState event-queue))
+  (reduce (fn [g f] (f g)) mGameState event-queue))
 
 
 
@@ -208,7 +276,14 @@
 ; GL Event Handler Object
 
 
-
+; Color Vectors for cubes
+(def cubeColor
+  [(float-array [0.0 0.8 1.0 1.0])
+   (float-array [0.5 0.5 0.5 0.0])]) 
+  ;[(Vector3D. 0.0 0.8 1.0 1.0) 
+   ;(Vector3D. 0.5 0.5 0.5 0.0)])
+   
+           
   
 (defrecord GLEventHandler 
   [_gameState]
@@ -229,8 +304,12 @@
      (.glBindVertexArray gl (first VAO))
      (.glGenBuffers gl (count VBO) VBO 0)
      
-     (.glBindBuffer gl GL4/GL_ARRAY_BUFFER (first VBO))
-     (.glBufferData gl GL4/GL_ARRAY_BUFFER (-> vertex_buffer .limit (* 4)) vertex_buffer GL4/GL_STATIC_DRAW)
+     ;(.glBindBuffer gl GL4/GL_ARRAY_BUFFER (second VBO))
+     ;(.glBufferData gl GL4/GL_ARRAY_BUFFER (count vertex_colors))
+     ;(.glVertexAttribPointer gl 1 3 GL4/GL_FLOAT false 0 0)
+     
+     ;(.glBindBuffer gl GL4/GL_ARRAY_BUFFER (first VBO))
+     ;(.glBufferData gl GL4/GL_ARRAY_BUFFER (-> vertex_buffer .limit (* 4)) vertex_buffer GL4/GL_STATIC_DRAW)
      
      
      (-> gameState :camera (init glAutoDrawable))
@@ -243,17 +322,25 @@
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)
          aspect (/ 16.0 9.0)
-         mv_location (.glGetUniformLocation gl programId "model_view_matrix")
-         proj_location (.glGetUniformLocation gl programId "projection_matrix")
+         mv_location    (.glGetUniformLocation gl programId "model_view_matrix")
+         proj_location  (.glGetUniformLocation gl programId "projection_matrix")
          
-         perspective_matrix (perspective 50.0 aspect 0.1 1000.0)
+         fovy (-> gameState :camera :zoom)
+         perspective_matrix (perspective fovy aspect 0.1 1000.0)
          view_matrix (Matrix3D.)
          model_matrix (Matrix3D.)
          mv_matrix (Matrix3D.)
+         
          background (FloatBuffer/allocate 4)]
  
+     ; Update GameState Object
+     (def gameState (eval-events gameState))
+     
      ; Set Matrices
-     (.translate view_matrix 0.0 0.0 -1.0)
+     (.translate view_matrix 
+       (-> gameState :camera :x)
+       (-> gameState :camera :y)
+       (-> gameState :camera :z))
 	 (.translate model_matrix 0.0 -0.5 0.0)
      (.concatenate mv_matrix view_matrix)
      (.concatenate mv_matrix model_matrix)
@@ -323,21 +410,76 @@
 ; Mouse Event Handler
 (defrecord MouseHandler []
   MouseListener
-  (mouseExited [this mouseEvent] ())
-  (mouseClicked [this mouseEvent] ())
-  (mousePressed [this mouseEvent] ())
-  (mouseReleased [this mouseEvent] ())
-  (mouseEntered [this mouseEvent] ()))
+  
+  (mouseExited [this mouseEvent] 
+    ())
+    
+  (mouseClicked [this mouseEvent] 
+    ())
+    
+  ; Change Cube Color
+  (mousePressed [this mouseEvent] 
+    (def cubeColor [(second cubeColor) (first cubeColor)]))
+    
+  (mouseReleased [this mouseEvent] 
+    ())
+    
+  (mouseEntered [this mouseEvent] 
+    ()))
 
   
+  
+; Utilities for checking key codes
+(defn up?    [keyCode] (or (= keyCode KeyEvent/VK_UP) (= keyCode KeyEvent/VK_W)))
+(defn down?  [keyCode] (or (= keyCode KeyEvent/VK_DOWN) (= keyCode KeyEvent/VK_S)))
+(defn left?  [keyCode] (or (= keyCode KeyEvent/VK_LEFT) (= keyCode KeyEvent/VK_A)))
+(defn right? [keyCode] (or (= keyCode KeyEvent/VK_RIGHT) (= keyCode KeyEvent/VK_D)))
+
 
 ; Key Event Handler
 (defrecord KeyHandler []
   KeyListener
-  (keyPressed [this keyEvent] ())
-  (keyReleased [this keyEvent] ())
-  (keyTyped [this keyEvent] ()))
+  
+  (keyPressed [_ keyEvent] 
+    "Handle Key Press"
+    (let [keyCode (.getKeyCode keyEvent)
+          speed 0.02
+          dx (+ (-> gameState :camera :x) 
+                (cond (left?  keyCode) speed
+                      (right? keyCode) (* -1 speed)
+                      :else 0))
+          dy (+ (-> gameState :camera :y)
+                (cond (up?   keyCode) (* -1 speed)
+                      (down? keyCode) speed
+                      :else 0))
+          dz (+ (-> gameState :camera :z)
+                0)
+          zoom (-> gameState :camera :zoom)
+          camera (->Camera dx dy dz zoom)]
+      (enqueue #(assoc % :camera camera))))
+  
+  (keyReleased [_ keyEvent] 
+    (let [keyCode (.getKeyCode keyEvent)]
+      nil))
+  
+  (keyTyped [_ keyEvent] 
+    (let [keyCode (.getKeyCode keyEvent)]
+      nil)))
 
+
+
+(defrecord MouseWheelHandler []
+  MouseWheelListener
+  (mouseWheelMoved [_ mouseWheelEvent]
+    (let [speed 10.0
+          mouseWheelMovement (-> mouseWheelEvent .getWheelRotation)
+          x (-> gameState :camera :x)
+          y (-> gameState :camera :y)
+          z (-> gameState :camera :z)
+          zoom (+ (* speed mouseWheelMovement) (-> gameState :camera :zoom))
+          camera (models/->Camera x y z zoom)]
+      (enqueue #(assoc % :camera camera)))))
+      
   
 
 

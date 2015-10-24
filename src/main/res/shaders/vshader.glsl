@@ -1,10 +1,13 @@
-#version 420
+#version 430
 
 layout (location=0) in vec3 vertexPosition;
+//layout (location=1) in vec4 vertexColor;
+out vec4 fragmentColor;
 
 // Uniform Variables for World Object Transforms
 uniform mat4 model_view_matrix;
 uniform mat4 projection_matrix;
+//uniform vec4 vertexColor;
 
 
 /**
@@ -12,6 +15,8 @@ uniform mat4 projection_matrix;
  */
 void main(void) {
     gl_Position = projection_matrix * model_view_matrix * vec4(vertexPosition, 1.0);
+    //fragmentColor = vec4(vertexPosition, 1.0) * 2 + vec4(0.5, 0.5, 0.5, 0.0);
+    //fragmentColor = vertexColor;
 }
 
 
