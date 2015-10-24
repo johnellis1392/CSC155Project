@@ -207,15 +207,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; GL Event Handler Object
 
-(defrecord GLEventHandler [mGameState]
+
+
+  
+(defrecord GLEventHandler 
+  [_gameState]
   GLEventListener
   
-  ; Initialize Game World
   (init
    [this glAutoDrawable]
-   (let [vertex_buffer (FloatBuffer/wrap vertex_position)
+   (let [vertex_buffer (FloatBuffer/wrap (float-array vertex_position))
 		 gl (-> glAutoDrawable .getGL)]
-     (def gameState mGameState)
+     (def gameState _gameState)
      
      (add-shader "src/main/res/shaders/vshader.glsl" GL4/GL_VERTEX_SHADER)
      (add-shader "src/main/res/shaders/fshader.glsl" GL4/GL_FRAGMENT_SHADER)
@@ -236,23 +239,18 @@
   
   
   
-  ; Update game world and Render
   (display
    [this glAutoDrawable]
    (let [gl (.getGL glAutoDrawable)
          aspect (/ 16.0 9.0)
-         mv_location (.glGetUniformLocation gl programId "mv_matrix")
-         proj_location (.glGetUniformLocation gl programId "proj_location")
+         mv_location (.glGetUniformLocation gl programId "model_view_matrix")
+         proj_location (.glGetUniformLocation gl programId "projection_matrix")
          
          perspective_matrix (perspective 50.0 aspect 0.1 1000.0)
          view_matrix (Matrix3D.)
          model_matrix (Matrix3D.)
          mv_matrix (Matrix3D.)
          background (FloatBuffer/allocate 4)]
-	
-     ;(def gameState
-     ;  {:camera (models/-update (-> gameState :camera) 1)
-     ;   :gameWorld (map #(models/-update % 1) (-> gameState :gameWorld))})
  
      ; Set Matrices
      (.translate view_matrix 0.0 0.0 -1.0)
@@ -290,26 +288,28 @@
      (.glEnable gl GL4/GL_LEQUAL)
      
      ; Draw objects
-     (.glDrawArrays gl GL4/GL_TRIANGLES 0 (count vertices))
+     (.glDrawArrays gl GL4/GL_TRIANGLES 0 (count vertex_position))
      ))
-  
-  
-  
-  ; Reshape the view screen
+     
+     
   (reshape
-   [this glAutoDrawable x y w h]
-   (let [gl (.getGL glAutoDrawable)]
-     gl))
-  
+    [this glAutoDrawable x y w h]
+    (let [gl (.getGL glAutoDrawable)]
+      gl))
+
+
+
+  (dispose
+    [this glAutoDrawable]
+    (let [gl (.getGL glAutoDrawable)]
+ 	  ;(.glDeleteVertexArrays gl 1 VAO)
+      ;(.glDeleteProgram gl programId)
+      gl)))
   
 
-  ; Dispose all graphics objects
-  (dispose
-   [this glAutoDrawable]
-   (let [gl (.getGL glAutoDrawable)]
-   	 ;(.glDeleteVertexArrays gl 1 VAO)
-     ;(.glDeleteProgram gl programId)
-     gl)))
+
+
+
 
 
 
@@ -323,20 +323,22 @@
 ; Mouse Event Handler
 (defrecord MouseHandler []
   MouseListener
-  (mouseEntered [mouseEvent] ())
-  (mouseExited [mouseEvent] ())
-  (mouseClicked [mouseEvent] ())
-  (mousePressed [mouseEvent] ())
-  (mouseReleased [mouseEvent] ()))
+  (mouseExited [this mouseEvent] ())
+  (mouseClicked [this mouseEvent] ())
+  (mousePressed [this mouseEvent] ())
+  (mouseReleased [this mouseEvent] ())
+  (mouseEntered [this mouseEvent] ()))
 
+  
 
 ; Key Event Handler
 (defrecord KeyHandler []
   KeyListener
-  (keyPressed [keyEvent] ())
-  (keyReleased [keyEvent] ())
-  (keyTyped [keyEvent] ()))
+  (keyPressed [this keyEvent] ())
+  (keyReleased [this keyEvent] ())
+  (keyTyped [this keyEvent] ()))
 
+  
 
 
 

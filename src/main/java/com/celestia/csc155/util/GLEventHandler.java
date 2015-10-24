@@ -282,10 +282,3 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
 
 
 
-
-
-
-
-
-
-
