@@ -1,0 +1,63 @@
+[0m[[0minfo[0m] [0mRunning com.celestia.Main [0m
+[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
+[0m[[0mdebug[0m] [0m  Classpath:[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/Projects/csc155/csc155scala/target/scala-2.11/classes[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/Projects/csc155/csc155scala/lib/graphicslib3D.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/Projects/csc155/csc155scala/lib/jruby-complete-9.0.1.0.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/Projects/csc155/csc155scala/lib/clojure-1.7.0.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/Projects/csc155/csc155scala/lib/clojure-1.6.0.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.6.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt-main/jars/gluegen-rt-main-2.3.1.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-android-aarch64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-armv6hf.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-windows-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-solaris-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-solaris-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-windows-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-armv6.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-macosx-universal.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-android-armv6.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all-main/jars/jogl-all-main-2.3.1.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-android-aarch64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-android-armv6.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-armv6hf.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-solaris-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-armv6.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-windows-i586.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-solaris-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-macosx-universal.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-windows-amd64.jar[0m
+[0m[[0mdebug[0m] [0m	/home/celestia/.ivy2/cache/org.jruby/jruby-complete/jars/jruby-complete-1.6.5.jar[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread AWT-Shutdown to terminate.[0m
+[0m[[0mdebug[0m] [0mDisposing 1 top-level windows...[0m
+[0m[[0mdebug[0m] [0mWaiting 2 s to let AWT thread exit.[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[AWT-Shutdown,5,system][0m
+[0m[[0mdebug[0m] [0mInterrupting thread Thread-1[0m
+[0m[[0mdebug[0m] [0m	Interrupted Thread-1[0m
+[0m[[0mdebug[0m] [0mInterrupting thread run-main-0-SharedResourceRunner[0m
+[0m[[0mdebug[0m] [0m	Interrupted run-main-0-SharedResourceRunner[0m
+[0m[[0mdebug[0m] [0mInterrupting thread ObjectProxyCache 1 vulture[0m
+[0m[[0mdebug[0m] [0m	Interrupted ObjectProxyCache 1 vulture[0m
+[0m[[0mdebug[0m] [0mInterrupting thread run-main-0-FPSAWTAnimator#00-Timer0[0m
+[0m[[0mdebug[0m] [0m	Interrupted run-main-0-FPSAWTAnimator#00-Timer0[0m
+[0m[[0mdebug[0m] [0mInterrupting thread NativeWindowFactory_ShutdownHook[0m
+[0m[[0mdebug[0m] [0m	Interrupted NativeWindowFactory_ShutdownHook[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[Java2D Disposer,10,system][0m
+[0m[[0mdebug[0m] [0mInterrupting thread AWT-EventQueue-1[0m
+[0m[[0mdebug[0m] [0m	Interrupted AWT-EventQueue-1[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[AWT-XAWT,6,system][0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[XToolkt-Shutdown-Thread,5,system][0m
+[0m[[0mdebug[0m] [0mInterrupting thread AWT-EventQueue-0[0m
+[0m[[0mdebug[0m] [0m	Interrupted AWT-EventQueue-0[0m
+[0m[[0mdebug[0m] [0mInterrupting thread run-main-0-SharedResourceRunner[0m
+[0m[[0mdebug[0m] [0m	Interrupted run-main-0-SharedResourceRunner[0m
+[0m[[0mdebug[0m] [0m	Thread AWT-Shutdown exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main-0-FPSAWTAnimator#00-Timer0 to terminate.[0m

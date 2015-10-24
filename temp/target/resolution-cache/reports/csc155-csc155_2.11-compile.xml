@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="csc155"
+		module="csc155_2.11"
+		revision="1.0"
+		conf="compile"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20151023230549"/>
+	<dependencies>
+		<module organisation="org.jruby" name="jruby-complete">
+			<revision name="1.6.5" status="release" pubdate="20111025083202" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="5">
+				<metadata-artifact status="no" details="" size="9411" time="0" location="/home/celestia/.ivy2/cache/org.jruby/jruby-complete/ivy-1.6.5.xml" searched="false" origin-is-local="false" origin-location="http://repo1.maven.org/maven2/org/jruby/jruby-complete/1.6.5/jruby-complete-1.6.5.pom"/>
+				<caller organisation="csc155" name="csc155_2.11" conf="compile" rev="1.6.5" rev-constraint-default="1.6.5" rev-constraint-dynamic="1.6.5" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="jruby-complete" type="jar" ext="jar" status="no" details="" size="13312045" time="0" location="/home/celestia/.ivy2/cache/org.jruby/jruby-complete/jars/jruby-complete-1.6.5.jar">
+						<origin-location is-local="false" location="http://repo1.maven.org/maven2/org/jruby/jruby-complete/1.6.5/jruby-complete-1.6.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jogamp.jogl" name="jogl-all-main">
+			<revision name="2.3.1" status="release" pubdate="20150914224114" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jogamp.org/jogl/www/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="3">
+				<license name="BSD-2 License" url="http://www.opensource.org/licenses/BSD-2-Clause"/>
+				<license name="BSD-3 License" url="http://www.opensource.org/licenses/BSD-3-Clause"/>
+				<license name="SGI Free Software License B" url="http://oss.sgi.com/projects/FreeB"/>
+				<license name="Apache License Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<license name="Apache License Version 1.1" url="http://www.apache.org/licenses/LICENSE-1.1"/>
+				<license name="Ubuntu Font Licence 1.0" url="http://font.ubuntu.com/ufl/ubuntu-font-licence-1.0.txt"/>
+				<metadata-artifact status="no" details="" size="4554" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all-main/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all-main/2.3.1/jogl-all-main-2.3.1.pom"/>
+				<caller organisation="csc155" name="csc155_2.11" conf="compile" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="jogl-all-main" type="jar" ext="jar" status="no" details="" size="345" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all-main/jars/jogl-all-main-2.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all-main/2.3.1/jogl-all-main-2.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jogamp.jogl" name="jogl-all">
+			<revision name="2.3.1" status="release" pubdate="20150327155400" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jogamp.org/jogl/www/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="4">
+				<license name="BSD-2 License" url="http://www.opensource.org/licenses/BSD-2-Clause"/>
+				<license name="BSD-3 License" url="http://www.opensource.org/licenses/BSD-3-Clause"/>
+				<license name="SGI Free Software License B" url="http://oss.sgi.com/projects/FreeB"/>
+				<license name="Apache License Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<license name="Apache License Version 1.1" url="http://www.apache.org/licenses/LICENSE-1.1"/>
+				<license name="Ubuntu Font Licence 1.0" url="http://font.ubuntu.com/ufl/ubuntu-font-licence-1.0.txt"/>
+				<metadata-artifact status="no" details="" size="3051" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1.pom"/>
+				<caller organisation="org.jogamp.jogl" name="jogl-all-main" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
+				<artifacts>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-android-aarch64" status="no" details="" size="62355" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-android-aarch64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-android-aarch64.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-android-armv6" status="no" details="" size="60875" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-android-armv6.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-android-armv6.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-linux-i586" status="no" details="" size="207221" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-linux-i586.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-linux-armv6hf" status="no" details="" size="157966" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-armv6hf.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-linux-armv6hf.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-solaris-i586" status="no" details="" size="153802" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-solaris-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-solaris-i586.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-linux-armv6" status="no" details="" size="154248" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-armv6.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-linux-armv6.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" status="no" details="" size="3321517" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-windows-i586" status="no" details="" size="203654" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-windows-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-windows-i586.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-solaris-amd64" status="no" details="" size="210410" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-solaris-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-solaris-amd64.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-linux-amd64" status="no" details="" size="213572" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-linux-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-linux-amd64.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-macosx-universal" status="no" details="" size="446852" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-macosx-universal.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-macosx-universal.jar"/>
+					</artifact>
+					<artifact name="jogl-all" type="jar" ext="jar" extra-classifier="natives-windows-amd64" status="no" details="" size="233528" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.jogl/jogl-all/jars/jogl-all-2.3.1-natives-windows-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/jogl/jogl-all/2.3.1/jogl-all-2.3.1-natives-windows-amd64.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jogamp.gluegen" name="gluegen-rt-main">
+			<revision name="2.3.1" status="release" pubdate="20150914224113" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jogamp.org/gluegen/www/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="BSD-2 License" url="http://www.opensource.org/licenses/BSD-2-Clause"/>
+				<license name="BSD-3 License" url="http://www.opensource.org/licenses/BSD-3-Clause"/>
+				<license name="BSD-4 License" url="http://www.spdx.org/licenses/BSD-4-Clause"/>
+				<metadata-artifact status="no" details="" size="4282" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt-main/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt-main/2.3.1/gluegen-rt-main-2.3.1.pom"/>
+				<caller organisation="csc155" name="csc155_2.11" conf="compile" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="gluegen-rt-main" type="jar" ext="jar" status="no" details="" size="345" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt-main/jars/gluegen-rt-main-2.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt-main/2.3.1/gluegen-rt-main-2.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jogamp.gluegen" name="gluegen-rt">
+			<revision name="2.3.1" status="release" pubdate="20150327153300" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jogamp.org/gluegen/www/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="2">
+				<license name="BSD-2 License" url="http://www.opensource.org/licenses/BSD-2-Clause"/>
+				<license name="BSD-3 License" url="http://www.opensource.org/licenses/BSD-3-Clause"/>
+				<license name="BSD-4 License" url="http://www.spdx.org/licenses/BSD-4-Clause"/>
+				<metadata-artifact status="no" details="" size="2750" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1.pom"/>
+				<caller organisation="org.jogamp.gluegen" name="gluegen-rt-main" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
+				<artifacts>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-android-aarch64" status="no" details="" size="3303" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-android-aarch64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-android-aarch64.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-linux-armv6hf" status="no" details="" size="3010" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-armv6hf.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-linux-armv6hf.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-windows-i586" status="no" details="" size="7538" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-windows-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-windows-i586.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-solaris-amd64" status="no" details="" size="4598" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-solaris-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-solaris-amd64.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-linux-i586" status="no" details="" size="4097" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-linux-i586.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-solaris-i586" status="no" details="" size="3909" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-solaris-i586.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-solaris-i586.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" status="no" details="" size="326269" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-windows-amd64" status="no" details="" size="8120" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-windows-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-windows-amd64.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-linux-armv6" status="no" details="" size="3006" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-armv6.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-linux-armv6.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-linux-amd64" status="no" details="" size="4112" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-linux-amd64.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-linux-amd64.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-macosx-universal" status="no" details="" size="5053" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-macosx-universal.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-macosx-universal.jar"/>
+					</artifact>
+					<artifact name="gluegen-rt" type="jar" ext="jar" extra-classifier="natives-android-armv6" status="no" details="" size="7178" time="0" location="/home/celestia/.ivy2/cache/org.jogamp.gluegen/gluegen-rt/jars/gluegen-rt-2.3.1-natives-android-armv6.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/jogamp/gluegen/gluegen-rt/2.3.1/gluegen-rt-2.3.1-natives-android-armv6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.11.6" status="release" pubdate="20150225170105" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.6/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
+				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
+				<metadata-artifact status="no" details="" size="2653" time="0" location="/home/celestia/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.6.xml" searched="false" origin-is-local="false" origin-location="http://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.6/scala-library-2.11.6.pom"/>
+				<caller organisation="csc155" name="csc155_2.11" conf="compile" rev="2.11.6" rev-constraint-default="2.11.6" rev-constraint-dynamic="2.11.6" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="5564007" time="0" location="/home/celestia/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.6.jar">
+						<origin-location is-local="false" location="http://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.6/scala-library-2.11.6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
