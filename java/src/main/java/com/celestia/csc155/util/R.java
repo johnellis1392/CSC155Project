@@ -35,7 +35,8 @@ public class R {
     }
 
     public static class uniforms {
-        public static final String model_view_matrix = "model_view_matrix";
+        public static final String view_matrix = "view_matrix";
+        public static final String model_matrix = "model_matrix";
         public static final String projection_matrix = "projection_matrix";
     }
 

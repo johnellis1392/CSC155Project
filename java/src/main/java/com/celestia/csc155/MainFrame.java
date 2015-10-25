@@ -6,8 +6,7 @@ import com.celestia.csc155.util.GLEventHandler;
 import com.celestia.csc155.util.R;
 
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
@@ -33,6 +32,7 @@ public class MainFrame extends JFrame {
         glCanvas.addGLEventListener(glEventHandler);
         glCanvas.addMouseListener((MouseListener) glEventHandler);
         glCanvas.addKeyListener((KeyListener) glEventHandler);
+        glCanvas.addMouseWheelListener((MouseWheelListener) glEventHandler);
         glCanvas.setAnimator(fpsAnimator);
         setSize(size);
         setLocationRelativeTo(null);
