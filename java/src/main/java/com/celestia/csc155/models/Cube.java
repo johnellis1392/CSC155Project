@@ -9,7 +9,8 @@ import java.nio.*;
 
 public class Cube implements IGameObject {
 	
-	private Matrix3D position;
+//	private Matrix3D position;
+	private Point3D position;
 	private Matrix3D rotation;
 	private Matrix3D scale;
 	private int[] VAO = new int[1];
@@ -19,7 +20,8 @@ public class Cube implements IGameObject {
 	private final int programId;
 	
 	public Cube(final int programId) {
-		this.position = new Matrix3D();
+//		this.position = new Matrix3D();
+		this.position = new Point3D();
 		this.rotation = new Matrix3D();
 		this.scale = new Matrix3D();
 		this.programId = programId;
@@ -54,7 +56,11 @@ public class Cube implements IGameObject {
     	gl.glEnable(GL4.GL_DEPTH_TEST);
     	gl.glDepthFunc(GL4.GL_LEQUAL);
     	
-    	gl.glUniformMatrix4fv(model_matrix_location, 1, false, position.getFloatValues(), 0);
+    	final Matrix3D pos = new Matrix3D();
+    	pos.concatenate(scale);
+    	pos.concatenate(rotation);
+    	pos.translate(getX(), getY(), getZ());
+    	gl.glUniformMatrix4fv(model_matrix_location, 1, false, pos.getFloatValues(), 0);
     	gl.glDrawArrays(GL4.GL_TRIANGLES, 0, R.vertices.cube.length);
 	}
 	
@@ -67,7 +73,7 @@ public class Cube implements IGameObject {
 	
 	
 	public void translate(final double x, final double y, final double z) {
-		position.translate(x, y, z);
+		position = position.add(new Point3D(x, y, z));
 	}
 	
 	
@@ -78,6 +84,22 @@ public class Cube implements IGameObject {
 	
 	public void scale(final double x, final double y, final double z) {
 		scale.scale(x, y, z);
+	}
+	
+	public double getX() {
+		return this.position.getX();
+	}
+	
+	public double getY() {
+		return this.position.getY();
+	}
+	
+	public double getZ() {
+		return this.position.getZ();
+	}
+	
+	public Point3D getPosition() {
+		return this.position;
 	}
 }
 

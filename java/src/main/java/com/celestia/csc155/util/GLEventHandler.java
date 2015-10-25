@@ -29,21 +29,14 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     private final GLProgramBuilder glProgramBuilder = new GLProgramBuilder();
     private GLProgram glProgram;
 
-    private final IServiceProvider mServiceProvider = new ServiceProvider();
+//    private final IServiceProvider mServiceProvider = new ServiceProvider();
 //    private IScriptProvider mScriptProvider = new ScriptProvider();
 
-    private final IUpdateService mUpdateService = mServiceProvider.getUpdateService();
-    private final IRenderService mRenderService = mServiceProvider.getRenderService();
-    private final ICollisionService mCollisionService = mServiceProvider.getCollisionService();
+//    private final IUpdateService mUpdateService = mServiceProvider.getUpdateService();
+//    private final IRenderService mRenderService = mServiceProvider.getRenderService();
+//    private final ICollisionService mCollisionService = mServiceProvider.getCollisionService();
 
     private IGameState mGameState;
-
-    private int[] VAO = new int[1];
-    private int[] VBO = new int[1];
-
-    private float x = 0.0f;
-    private float y = -0.5f;
-    private float z = 0.0f;
 
 
     /**
@@ -57,15 +50,24 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
                 .build(glAutoDrawable);
         
         final Camera camera = new Camera();
-        camera.translate(0.0, 0.0, 0.5);
-        final IGameObject triangle = new Triangle(glProgram.programId);
+        final Triangle triangle = new Triangle(glProgram.programId);
+        final Triangle triangle2 = new Triangle(glProgram.programId);
+        final Cube cube = new Cube(glProgram.programId);
+//        final IGameObject axis = new Axis(glProgram.programId);
+        
+        camera.translate(0.0, 0.0, 0.0);
         triangle.translate(1, 0, 0);
-        final IGameObject cube = new Cube(glProgram.programId);
         cube.translate(-1, 0, 0);
+        ((IOrbiter) triangle).setCenter(cube);
+        ((IOrbiter) triangle2).setCenter(triangle);
+        triangle.setSpeed(0.001);
+        triangle2.setSpeed(0.002);
         
         final ArrayList<IGameObject> gameWorld = new ArrayList<IGameObject>();
         gameWorld.add(triangle);
+        gameWorld.add(triangle2);
         gameWorld.add(cube);
+//        gameWorld.add(axis);
         
         this.mGameState = new GameState(
         	camera,
@@ -73,14 +75,6 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
         );
         
         mGameState.init(glAutoDrawable);
-        // Initialize Array buffers for Pyramid object 
-//        gl.glGenVertexArrays(VAO.length, VAO, 0);
-//        gl.glBindVertexArray(VAO[0]);
-//        gl.glGenBuffers(VBO.length, VBO, 0);
-//
-//        gl.glBindBuffer(GL4.GL_ARRAY_BUFFER, VBO[0]);
-//        FloatBuffer pyramidBuffer = FloatBuffer.wrap(R.vertices.cube);
-//        gl.glBufferData(GL4.GL_ARRAY_BUFFER, pyramidBuffer.limit() * 4, pyramidBuffer, GL4.GL_STATIC_DRAW);
     }
 
     
@@ -113,12 +107,11 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	background.put(3, 0.0f);
     	gl.glClearBufferfv(GL4.GL_COLOR, 0, background);
     	
-//    	final int model_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.model_view_matrix);
     	final int view_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.view_matrix);
     	final int projection_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.projection_matrix);
     	
     	final float aspect = (float) R.util.aspect;
-    	final float fovy = (float) mGameState.getCamera().getZoom();
+    	final float fovy = 50.0f;
     	final Matrix3D projectionMatrix = perspective(fovy, aspect, 0.1f, 1000.0f);
     	final Matrix3D viewMatrix = new Matrix3D();
     	
@@ -128,29 +121,11 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     		-mGameState.getCamera().getZ()
     	);
     	
-//    	Matrix3D modelMatrix = new Matrix3D(); 
-//    	modelMatrix.translate(x, y, z);
-    	
-//    	Matrix3D modelViewMatrix = new Matrix3D(); 
-//    	modelViewMatrix.concatenate(viewMatrix);
-//    	modelViewMatrix.concatenate(modelMatrix);
-    	
-    	// Set initial states for projection matrices
-//    	gl.glUniformMatrix4fv(model_view_location, 1, false, modelViewMatrix.getFloatValues(), 0);
     	gl.glUniformMatrix4fv(view_location, 1, false, viewMatrix.getFloatValues(), 0);
     	gl.glUniformMatrix4fv(projection_location, 1, false, projectionMatrix.getFloatValues(), 0);
     	
+    	mGameState.update(1.0);
     	mGameState.render(glAutoDrawable);
-//    	gl.glBindBuffer(GL4.GL_ARRAY_BUFFER, VBO[0]);
-//    	gl.glVertexAttribPointer(0, 3, GL4.GL_FLOAT, false, 0, 0);
-//    	gl.glEnableVertexAttribArray(0);
-//    	
-//    	gl.glEnable(GL4.GL_CULL_FACE);
-//    	gl.glFrontFace(GL4.GL_CW);
-//    	gl.glEnable(GL4.GL_DEPTH_TEST);
-//    	gl.glDepthFunc(GL4.GL_LEQUAL);
-//    	
-//    	gl.glDrawArrays(GL4.GL_TRIANGLES, 0, 36);
     }
     
 
@@ -243,10 +218,10 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     public void keyTyped(KeyEvent keyEvent) {}
     
     public void mouseWheelMoved(final MouseWheelEvent mouseWheelEvent) {
-    	final float speed = 10.0f;
+    	final float speed = 1.0f;
     	final float mouseWheelMovement = (float) mouseWheelEvent.getWheelRotation();
-    	final float zoom = speed * mouseWheelMovement + (float) mGameState.getCamera().getZoom();
-    	mGameState.getCamera().setZoom(zoom);
+    	final float zoom = speed * mouseWheelMovement;
+    	mGameState.getCamera().translate(0, 0, zoom);
     }
 }
 
