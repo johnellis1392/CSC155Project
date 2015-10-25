@@ -16,7 +16,7 @@ import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
-import graphicslib3D.Matrix3D;
+import graphicslib3D.*;
 import java.nio.FloatBuffer;
 
 /**
@@ -55,7 +55,7 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
         final Cube cube = new Cube(glProgram.programId);
 //        final IGameObject axis = new Axis(glProgram.programId);
         
-        camera.translate(0.0, 0.0, 0.0);
+        camera.translate(0.0, 0.0, 10.0);
         triangle.translate(1, 0, 0);
         cube.translate(-1, 0, 0);
         ((IOrbiter) triangle).setCenter(cube);
@@ -115,11 +115,14 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	final Matrix3D projectionMatrix = perspective(fovy, aspect, 0.1f, 1000.0f);
     	final Matrix3D viewMatrix = new Matrix3D();
     	
+    	viewMatrix.concatenate(mGameState.getCamera().getRotation());
     	viewMatrix.translate(
     		-mGameState.getCamera().getX(), 
     		-mGameState.getCamera().getY(), 
     		-mGameState.getCamera().getZ()
     	);
+    	
+    	
     	
     	gl.glUniformMatrix4fv(view_location, 1, false, viewMatrix.getFloatValues(), 0);
     	gl.glUniformMatrix4fv(projection_location, 1, false, projectionMatrix.getFloatValues(), 0);
@@ -187,27 +190,40 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
      */
     public void keyPressed(KeyEvent keyEvent) {
     	final int keyCode = keyEvent.getKeyCode();
-    	final float speed = 0.02f;
+    	final float speed = 0.05f;
+    	final float rotationSpeed = 0.3f;
     	float dx = 0.0f;
     	float dy = 0.0f;
     	float dz = 0.0f;
     	
     	switch(keyCode) {
     	case KeyEvent.VK_W:
-    	case KeyEvent.VK_UP:
-    		dy += speed;
+    		dz += speed;
     		break;
     	case KeyEvent.VK_S:
-    	case KeyEvent.VK_DOWN:
-    		dy -= speed;
+    		dz -= speed;
     		break;
     	case KeyEvent.VK_A:
-    	case KeyEvent.VK_LEFT:
     		dx -= speed;
     		break;
     	case KeyEvent.VK_D:
-    	case KeyEvent.VK_RIGHT:
     		dx += speed;
+    		break;
+    	case KeyEvent.VK_E:
+    		dy += speed;
+    		break;
+    	case KeyEvent.VK_Q:
+    		dy -= speed;
+    		break;
+    	case KeyEvent.VK_UP:
+    		break;
+    	case KeyEvent.VK_DOWN:
+    		break;
+    	case KeyEvent.VK_LEFT:
+    		mGameState.getCamera().rotate(rotationSpeed, new Vector3D(0, 1, 0));
+    		break;
+    	case KeyEvent.VK_RIGHT:
+    		mGameState.getCamera().rotate(-rotationSpeed, new Vector3D(0, 1, 0));
     		break;
     	}
     	

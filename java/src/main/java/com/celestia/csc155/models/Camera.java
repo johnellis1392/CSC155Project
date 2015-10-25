@@ -31,6 +31,10 @@ public class Camera {
     	rotation.rotate(roll, pitch, yaw);
     }
     
+    public void rotate(final double roll, final Vector3D axis) {
+    	rotation.rotate(roll, axis);
+    }
+    
     public void scale(final double x, final double y, final double z) {
     	scale.scale(x, y, z);
     }
@@ -59,6 +63,10 @@ public class Camera {
     	final Matrix3D position = new Matrix3D();
     	position.translate(x, y, z);
     	return position;
+    }
+    
+    public Matrix3D getRotation() {
+    	return rotation;
     }
 }
 
