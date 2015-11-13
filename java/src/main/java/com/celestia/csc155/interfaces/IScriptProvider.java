@@ -6,7 +6,7 @@ import javax.script.ScriptException;
 import com.celestia.csc155.models.GameState;
 
 import java.io.FileNotFoundException;
-import java.util.List;
+import java.util.*;
 
 import com.jogamp.opengl.GLAutoDrawable;
 
@@ -18,12 +18,16 @@ public interface IScriptProvider {
     List<CompiledScript> compile()
             throws FileNotFoundException, ScriptException;
 
-    void eval(GLAutoDrawable glAutoDrawable)
+    void eval(final GLAutoDrawable glAutoDrawable)
         throws FileNotFoundException, ScriptException;
     
-    void eval(GameState gameState)
+    void eval(final GameState gameState)
+    	throws FileNotFoundException, ScriptException;
+    
+    void eval(final HashMap<String, Object> bindings)
     	throws FileNotFoundException, ScriptException;
     
     void call(String function, Object object)
     	throws FileNotFoundException, ScriptException, NoSuchMethodException ;
 }
+

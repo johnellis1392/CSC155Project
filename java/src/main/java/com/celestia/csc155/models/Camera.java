@@ -5,68 +5,91 @@ import com.jogamp.opengl.*;
 
 
 public class Camera {
-	private double x;
-	private double y;
-	private double z;
-	private double zoom;
-	private Matrix3D rotation;
-	private Matrix3D scale;
+	private Vector3D position;
+	
+	private final Vector3D xAxis = new Vector3D(1, 0, 0);
+	private final Vector3D yAxis = new Vector3D(0, 1, 0);
+	private final Vector3D zAxis = new Vector3D(0, 0, 1);
+	
+	private Vector3D n = new Vector3D(1, 0, 0);
+	private Vector3D v = new Vector3D(0, 1, 0);
+	private Vector3D u = new Vector3D(0, 0, 1);
     
     public Camera() {
-        this.rotation = new Matrix3D();
-        this.scale = new Matrix3D();
-        this.x = 0.0;
-        this.y = 0.0;
-        this.z = 0.0;
-        this.zoom = 0.0;
-    }
-    
-    public void translate(final double x, final double y, final double z) {
-    	this.x += x;
-    	this.y += y;
-    	this.z += z;
-    }
-    
-    public void rotate(final double roll, final double pitch, final double yaw) {
-    	rotation.rotate(roll, pitch, yaw);
-    }
-    
-    public void rotate(final double roll, final Vector3D axis) {
-    	rotation.rotate(roll, axis);
-    }
-    
-    public void scale(final double x, final double y, final double z) {
-    	scale.scale(x, y, z);
-    }
-    
-    public final double getX() {
-    	return this.x;
-    }
-    
-    public final double getY() {
-    	return this.y;
-    }
-    
-    public final double getZ() {
-    	return this.z;
-    }
-
-    public final double getZoom() {
-    	return this.zoom;
-    }
-    
-    public double setZoom(final double zoom) {
-    	return this.zoom = zoom;
+        this.position = new Vector3D();
     }
     
     public Matrix3D getPosition() {
-    	final Matrix3D position = new Matrix3D();
-    	position.translate(x, y, z);
-    	return position;
+    	final Matrix3D matrix = new Matrix3D();
+    	matrix.translate(
+    		this.position.getX(),
+    		this.position.getY(),
+    		this.position.getZ()
+    	);
+    	
+    	return matrix;
     }
     
     public Matrix3D getRotation() {
+    	final Matrix3D rotation = new Matrix3D();
+    	rotation.setRow(0, u);
+    	rotation.setRow(1, v);
+    	rotation.setRow(2, n);
     	return rotation;
     }
+    
+    
+    
+    public void translate(final double x, final double y, final double z) {
+    	translate(new Vector3D(x, y, z));
+    }
+    
+    
+    public void translate(final Vector3D movement) {
+    	final Vector3D delta_p = movement.mult(getRotation());
+//    	delta_p.normalize();
+    	this.position = this.position.add(delta_p);
+    }
+    
+    
+    public void yaw(final double yaw) {
+    	final Matrix3D rotation = new Matrix3D(yaw, this.v);
+    	this.n = this.n.mult(rotation);
+    	this.u = this.u.mult(rotation);
+    }
+    
+    public void pitch(final double pitch) {
+    	final Matrix3D rotation = new Matrix3D(pitch, this.u);
+    	this.v = this.v.mult(rotation);
+    	this.n = this.n.mult(rotation);
+    }
+    
+    
+    public void rotate(final double yaw, final double pitch, final double roll) {
+//    	final Matrix3D rotation = new Matrix3D();
+//    	rotation.rotate(roll, pitch, yaw);
+//    	u = u.mult(rotation);
+//    	v = v.mult(rotation);
+//    	n = n.mult(rotation);
+    	this.yaw(yaw);
+    	this.pitch(pitch);
+    }
+    
+    
+    
+    /**
+     * The view portion of the MVP Matrix!
+     */
+    public Matrix3D getViewTransform() {
+    	final Matrix3D viewTransform = new Matrix3D();
+    	viewTransform.concatenate(getRotation());
+    	viewTransform.concatenate(getPosition());
+    	return viewTransform;
+    }
 }
+
+
+
+
+
 

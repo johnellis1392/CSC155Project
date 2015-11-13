@@ -13,6 +13,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import javax.swing.*;
 
+
 public class MainFrame extends JFrame {
 
     private final double aspectRatio = R.util.aspect;
@@ -33,6 +34,7 @@ public class MainFrame extends JFrame {
         glCanvas.addMouseListener((MouseListener) glEventHandler);
         glCanvas.addKeyListener((KeyListener) glEventHandler);
         glCanvas.addMouseWheelListener((MouseWheelListener) glEventHandler);
+        glCanvas.addMouseMotionListener((MouseMotionListener) glEventHandler);
         glCanvas.setAnimator(fpsAnimator);
         setSize(size);
         setLocationRelativeTo(null);

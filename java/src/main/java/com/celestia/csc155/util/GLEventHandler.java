@@ -1,22 +1,19 @@
 
 package com.celestia.csc155.util;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import com.celestia.csc155.factories.*;
 import com.celestia.csc155.interfaces.*;
 import com.celestia.csc155.models.*;
 import com.celestia.csc155.providers.*;
 
+import java.awt.*;
 import java.awt.event.*;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
-
+import com.jogamp.opengl.*;
 import graphicslib3D.*;
+import graphicslib3D.light.*;
 import java.nio.FloatBuffer;
 
 /**
@@ -24,18 +21,17 @@ import java.nio.FloatBuffer;
  * @author ellisj
  *
  */
-public class GLEventHandler implements GLEventListener, MouseListener, KeyListener, MouseWheelListener {
+public class GLEventHandler implements GLEventListener, MouseListener, KeyListener, MouseWheelListener, MouseMotionListener {
 
     private final GLProgramBuilder glProgramBuilder = new GLProgramBuilder();
+    private IScriptProvider mScriptProvider = new ScriptProvider(); 
     private GLProgram glProgram;
 
-//    private final IServiceProvider mServiceProvider = new ServiceProvider();
-//    private IScriptProvider mScriptProvider = new ScriptProvider();
+    private Point mousePosition = new Point();
+    private boolean hasFocus = false;
+    private Robot robot;
 
-//    private final IUpdateService mUpdateService = mServiceProvider.getUpdateService();
-//    private final IRenderService mRenderService = mServiceProvider.getRenderService();
-//    private final ICollisionService mCollisionService = mServiceProvider.getCollisionService();
-
+    private PositionalLight positionalLight;
     private IGameState mGameState;
 
 
@@ -49,13 +45,15 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
                 .addShader(R.shaders.fshader, IGLProgramBuilder.GL_FRAGMENT_SHADER)
                 .build(glAutoDrawable);
         
+        mScriptProvider = new ScriptProvider()
+        		.addScript(R.ruby.main);
+        
         final Camera camera = new Camera();
         final Triangle triangle = new Triangle(glProgram.programId);
         final Triangle triangle2 = new Triangle(glProgram.programId);
         final Cube cube = new Cube(glProgram.programId);
-//        final IGameObject axis = new Axis(glProgram.programId);
         
-        camera.translate(0.0, 0.0, 10.0);
+        camera.translate(0.0, 0.0, -10.0);
         triangle.translate(1, 0, 0);
         cube.translate(-1, 0, 0);
         ((IOrbiter) triangle).setCenter(cube);
@@ -67,14 +65,20 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
         gameWorld.add(triangle);
         gameWorld.add(triangle2);
         gameWorld.add(cube);
-//        gameWorld.add(axis);
         
+        this.positionalLight = new PositionalLight();
         this.mGameState = new GameState(
         	camera,
         	gameWorld
         );
         
         mGameState.init(glAutoDrawable);
+        
+        try {
+        	this.robot = new Robot();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
     }
 
     
@@ -107,29 +111,62 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	background.put(3, 0.0f);
     	gl.glClearBufferfv(GL4.GL_COLOR, 0, background);
     	
+    	drawAxes(glAutoDrawable);
+    	
     	final int view_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.view_matrix);
     	final int projection_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.projection_matrix);
     	
     	final float aspect = (float) R.util.aspect;
     	final float fovy = 50.0f;
     	final Matrix3D projectionMatrix = perspective(fovy, aspect, 0.1f, 1000.0f);
-    	final Matrix3D viewMatrix = new Matrix3D();
-    	
-    	viewMatrix.concatenate(mGameState.getCamera().getRotation());
-    	viewMatrix.translate(
-    		-mGameState.getCamera().getX(), 
-    		-mGameState.getCamera().getY(), 
-    		-mGameState.getCamera().getZ()
-    	);
-    	
-    	
+    	final Matrix3D viewMatrix = mGameState.getCamera().getViewTransform();
+
     	
     	gl.glUniformMatrix4fv(view_location, 1, false, viewMatrix.getFloatValues(), 0);
     	gl.glUniformMatrix4fv(projection_location, 1, false, projectionMatrix.getFloatValues(), 0);
     	
+    	runScripts(glAutoDrawable);
+    	
     	mGameState.update(1.0);
     	mGameState.render(glAutoDrawable);
     }
+    
+    
+    public void runScripts(final GLAutoDrawable glAutoDrawable) {
+    	try {
+    		final HashMap<String, Object> bindings = new HashMap<String, Object>();
+    		bindings.put("glAutoDrawable", glAutoDrawable);
+    		bindings.put("GameState", mGameState);
+    		
+    		mScriptProvider.eval(bindings);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    
+    public void drawAxes(final GLAutoDrawable glAutoDrawable) {
+    	final GL2 gl = (GL2) glAutoDrawable.getGL();
+    	gl.glBegin(gl.GL_LINES);
+    	
+    	// Draw red x-axis
+    	gl.glColor3d(1.0, 0.0, 0.0);
+    	gl.glVertex3d(0.0, 0.0, 0.0);
+    	gl.glVertex3d(10.0, 0.0, 0.0);
+    	
+    	// Draw green y-axis
+    	gl.glColor3d(0.0, 1.0, 0.0);
+    	gl.glVertex3d(0.0, 0.0, 0.0);
+    	gl.glVertex3d(0.0, 10.0, 0.0);
+
+    	// Draw blue z-axis
+    	gl.glColor3d(0.0, 0.0, 1.0);
+    	gl.glVertex3d(0.0, 0.0, 0.0);
+    	gl.glVertex3d(0.0, 0.0, 10.0);
+    	
+    	gl.glEnd();
+    }
+    
     
 
     /**
@@ -181,7 +218,10 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     public void mouseExited(MouseEvent mouseEvent) {}
     public void mouseEntered(MouseEvent mouseEvent) {}
     public void mouseClicked(MouseEvent mouseEvent) {}
-    public void mousePressed(MouseEvent mouseEvent) {}
+    public void mousePressed(MouseEvent mouseEvent) {
+    	this.hasFocus = true;
+    }
+    
     public void mouseReleased(MouseEvent mouseEvent) {}
     
     
@@ -189,12 +229,15 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
      * Handle a key press
      */
     public void keyPressed(KeyEvent keyEvent) {
+    	if(!this.hasFocus) return;
     	final int keyCode = keyEvent.getKeyCode();
-    	final float speed = 0.05f;
-    	final float rotationSpeed = 0.3f;
+    	final float speed = 0.1f;
+    	final float rotationSpeed = 0.7f;
     	float dx = 0.0f;
     	float dy = 0.0f;
     	float dz = 0.0f;
+    	float dYaw = 0.0f;
+    	float dPitch = 0.0f;
     	
     	switch(keyCode) {
     	case KeyEvent.VK_W:
@@ -204,10 +247,10 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     		dz -= speed;
     		break;
     	case KeyEvent.VK_A:
-    		dx -= speed;
+    		dx += speed;
     		break;
     	case KeyEvent.VK_D:
-    		dx += speed;
+    		dx -= speed;
     		break;
     	case KeyEvent.VK_E:
     		dy += speed;
@@ -215,30 +258,55 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	case KeyEvent.VK_Q:
     		dy -= speed;
     		break;
+    	case KeyEvent.VK_ESCAPE:
+    		this.hasFocus = false;
+    		break;
     	case KeyEvent.VK_UP:
+    		dPitch -= rotationSpeed;
     		break;
     	case KeyEvent.VK_DOWN:
+    		dPitch += rotationSpeed;
     		break;
     	case KeyEvent.VK_LEFT:
-    		mGameState.getCamera().rotate(rotationSpeed, new Vector3D(0, 1, 0));
+    		dYaw -= rotationSpeed;
     		break;
     	case KeyEvent.VK_RIGHT:
-    		mGameState.getCamera().rotate(-rotationSpeed, new Vector3D(0, 1, 0));
+    		dYaw += rotationSpeed;
     		break;
     	}
     	
     	this.mGameState.getCamera().translate(dx, dy, dz);
+    	this.mGameState.getCamera().rotate(dYaw, dPitch, 0);
     }
+    
     
     public void keyReleased(KeyEvent keyEvent) {}
     public void keyTyped(KeyEvent keyEvent) {}
     
-    public void mouseWheelMoved(final MouseWheelEvent mouseWheelEvent) {
-    	final float speed = 1.0f;
-    	final float mouseWheelMovement = (float) mouseWheelEvent.getWheelRotation();
-    	final float zoom = speed * mouseWheelMovement;
-    	mGameState.getCamera().translate(0, 0, zoom);
+    public void mouseWheelMoved(final MouseWheelEvent mouseWheelEvent) {}
+
+    
+    public void mouseMoved(final MouseEvent mouseEvent) {
+//    	if(!this.hasFocus) return;
+//    	final Point point = mouseEvent.getPoint();
+//    	final double rotationSpeed = 0.11;
+//    	
+//    	final double deltaX = point.getX() - mousePosition.getX();
+//    	final double deltaY = point.getY() - mousePosition.getY();
+//    	
+//    	mGameState.getCamera().rotate(
+//    		-deltaY * rotationSpeed,
+//    		-deltaX * rotationSpeed, 
+//    		0
+//    	);
+//    	
+//    	this.mousePosition = point;
+//    	robot.mouseMove(700, 500);
     }
+    
+    
+    
+    public void mouseDragged(final MouseEvent mouseEvent) {}
 }
 
 

@@ -5,10 +5,8 @@ import com.celestia.csc155.models.GameState;
 
 import javax.script.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import com.jogamp.opengl.*;
 
@@ -20,6 +18,25 @@ public class ScriptProvider implements IScriptProvider {
 	public static final String engine = "jruby";
     private final ArrayList<String> scripts;
 
+    
+    @Override
+    public void eval(final HashMap<String, Object> hashMap) 
+    	throws FileNotFoundException, ScriptException {
+    	final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+    	final ScriptEngine ruby = scriptEngineManager.getEngineByName(engine);
+    	final Bindings bindings = ruby.getBindings(ScriptContext.ENGINE_SCOPE);
+    	for(Map.Entry<String, Object> entry : hashMap.entrySet()) {
+    		bindings.put(
+    			entry.getKey(), 
+    			entry.getValue()
+    		);
+    	}
+    	
+    	for(String script : scripts) {
+    		final FileReader fileReader = new FileReader(script);
+    		ruby.eval(fileReader);
+    	}
+    }
     
 
     @Override
@@ -34,7 +51,7 @@ public class ScriptProvider implements IScriptProvider {
 //        bindings.put("GL_COLOR", GL4.GL_COLOR); 
         
         for(String script : scripts) {
-            FileReader fileReader = new FileReader(script);
+            final FileReader fileReader = new FileReader(script);
             ruby.eval(fileReader);
         }
     }
@@ -47,11 +64,11 @@ public class ScriptProvider implements IScriptProvider {
 	public void eval(final GameState gameState) 
     		throws FileNotFoundException, ScriptException {
     	
-    	ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-    	ScriptEngine ruby = scriptEngineManager.getEngineByName(engine);
+    	final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+    	final ScriptEngine ruby = scriptEngineManager.getEngineByName(engine);
     	
     	for(String script : scripts) {
-            FileReader fileReader = new FileReader(script);
+            final FileReader fileReader = new FileReader(script);
             ruby.eval(fileReader);
     	}
     }
