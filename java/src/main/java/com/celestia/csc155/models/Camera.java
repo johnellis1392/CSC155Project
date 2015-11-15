@@ -11,9 +11,9 @@ public class Camera {
 	private final Vector3D yAxis = new Vector3D(0, 1, 0);
 	private final Vector3D zAxis = new Vector3D(0, 0, 1);
 	
-	private Vector3D n = new Vector3D(1, 0, 0);
+	private Vector3D u = new Vector3D(0, 0, -1);
 	private Vector3D v = new Vector3D(0, 1, 0);
-	private Vector3D u = new Vector3D(0, 0, 1);
+	private Vector3D n = new Vector3D(-1, 0, 0);
     
     public Camera() {
         this.position = new Vector3D();
@@ -47,7 +47,6 @@ public class Camera {
     
     public void translate(final Vector3D movement) {
     	final Vector3D delta_p = movement.mult(getRotation());
-//    	delta_p.normalize();
     	this.position = this.position.add(delta_p);
     }
     
@@ -66,11 +65,6 @@ public class Camera {
     
     
     public void rotate(final double yaw, final double pitch, final double roll) {
-//    	final Matrix3D rotation = new Matrix3D();
-//    	rotation.rotate(roll, pitch, yaw);
-//    	u = u.mult(rotation);
-//    	v = v.mult(rotation);
-//    	n = n.mult(rotation);
     	this.yaw(yaw);
     	this.pitch(pitch);
     }

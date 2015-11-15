@@ -38,6 +38,25 @@ public class R {
         public static final String view_matrix = "view_matrix";
         public static final String model_matrix = "model_matrix";
         public static final String projection_matrix = "projection_matrix";
+        
+        public static final String normal_matrix = "normal_matrix";
+        public static final String global_ambient = "global_ambient";
+        public static final String positional_light = "positional_light";
+        public static final String material = "material";
+        
+        public static class PositionalLight {
+        	public static final String ambient = "positional_light.ambient";
+        	public static final String diffuse = "positional_light.diffuse";
+        	public static final String specular = "positional_light.specular";
+        	public static final String position = "positional_light.position";
+        }
+        
+        public static class Material {
+        	public static final String ambient = "material.ambient";
+        	public static final String diffuse = "material.diffuse";
+        	public static final String specular = "material.specular";
+        	public static final String shininess = "shininess";
+        }
     }
 
     public static class vertices {

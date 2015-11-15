@@ -9,22 +9,22 @@ import java.nio.*;
 
 public class Cube implements IGameObject {
 	
-//	private Matrix3D position;
 	private Point3D position;
 	private Matrix3D rotation;
 	private Matrix3D scale;
 	private int[] VAO = new int[1];
 	private int[] VBO = new int[1];
 	private static final int VERTEX_ATTRIB = 0;
-	private int model_matrix_location;
+	private Material material;
 	private final int programId;
+	private final float[] vertices = R.vertices.cube;
 	
 	public Cube(final int programId) {
-//		this.position = new Matrix3D();
 		this.position = new Point3D();
 		this.rotation = new Matrix3D();
 		this.scale = new Matrix3D();
 		this.programId = programId;
+		this.material = Material.GOLD;
 	}
 	
 	public void update(final double time) {
@@ -34,13 +34,13 @@ public class Cube implements IGameObject {
 	
 	public void init(final GLAutoDrawable glAutoDrawable) {
 		final GL4 gl = (GL4) glAutoDrawable.getGL();
-		model_matrix_location = gl.glGetUniformLocation(programId, R.uniforms.model_matrix);
+		
         gl.glGenVertexArrays(VAO.length, VAO, 0);
         gl.glBindVertexArray(VAO[0]);
         gl.glGenBuffers(VBO.length, VBO, 0);
 
         gl.glBindBuffer(GL4.GL_ARRAY_BUFFER, VBO[0]);
-        FloatBuffer floatBuffer = FloatBuffer.wrap(R.vertices.cube);
+        FloatBuffer floatBuffer = FloatBuffer.wrap(vertices);
         gl.glBufferData(GL4.GL_ARRAY_BUFFER, floatBuffer.limit() * 4, floatBuffer, GL4.GL_STATIC_DRAW);
 	}
 	
@@ -60,6 +60,18 @@ public class Cube implements IGameObject {
     	pos.concatenate(scale);
     	pos.concatenate(rotation);
     	pos.translate(getX(), getY(), getZ());
+    	
+    	final int material_ambient_location = gl.glGetUniformLocation(programId, R.uniforms.Material.ambient);
+		final int material_diffuse_location = gl.glGetUniformLocation(programId, R.uniforms.Material.diffuse);
+		final int material_specular_location = gl.glGetUniformLocation(programId, R.uniforms.Material.specular);
+		final int material_shininess_location = gl.glGetUniformLocation(programId, R.uniforms.Material.shininess);
+		
+		gl.glProgramUniform4fv(programId, material_ambient_location, 1, material.getAmbient(), 0);
+		gl.glProgramUniform4fv(programId, material_diffuse_location, 1, material.getDiffuse(), 0);
+		gl.glProgramUniform4fv(programId, material_specular_location, 1, material.getSpecular(), 0);
+		gl.glProgramUniform1f(programId, material_shininess_location, material.getShininess());
+		
+    	final int model_matrix_location = gl.glGetUniformLocation(programId, R.uniforms.model_matrix); 
     	gl.glUniformMatrix4fv(model_matrix_location, 1, false, pos.getFloatValues(), 0);
     	gl.glDrawArrays(GL4.GL_TRIANGLES, 0, R.vertices.cube.length);
 	}
@@ -69,6 +81,10 @@ public class Cube implements IGameObject {
 	
 	public void dispose(final GLAutoDrawable glAutoDrawable) {
 		
+	}
+	
+	public void setMaterial(final Material material) {
+		this.material = material;
 	}
 	
 	

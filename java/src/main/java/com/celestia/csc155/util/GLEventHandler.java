@@ -14,6 +14,7 @@ import java.awt.event.*;
 import com.jogamp.opengl.*;
 import graphicslib3D.*;
 import graphicslib3D.light.*;
+import graphicslib3D.shape.*;
 import java.nio.FloatBuffer;
 
 /**
@@ -32,6 +33,7 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     private Robot robot;
 
     private PositionalLight positionalLight;
+    private Material material;
     private IGameState mGameState;
 
 
@@ -41,17 +43,24 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     public void init(final GLAutoDrawable glAutoDrawable) {
         final GL4 gl = (GL4) glAutoDrawable.getGL();
         glProgram = glProgramBuilder
-        		.addShader(R.shaders.vshader, IGLProgramBuilder.GL_VERTEX_SHADER)
-                .addShader(R.shaders.fshader, IGLProgramBuilder.GL_FRAGMENT_SHADER)
-                .build(glAutoDrawable);
+       		.addShader(R.shaders.vshader, IGLProgramBuilder.GL_VERTEX_SHADER)
+            .addShader(R.shaders.fshader, IGLProgramBuilder.GL_FRAGMENT_SHADER)
+            .addShader(R.shaders.gshader, IGLProgramBuilder.GL_GEOMETRY_SHADER)
+            .build(glAutoDrawable);
         
         mScriptProvider = new ScriptProvider()
-        		.addScript(R.ruby.main);
+       		.addScript(R.ruby.main);
         
         final Camera camera = new Camera();
         final Triangle triangle = new Triangle(glProgram.programId);
         final Triangle triangle2 = new Triangle(glProgram.programId);
         final Cube cube = new Cube(glProgram.programId);
+        
+        cube.setMaterial(Material.BRONZE);
+        triangle.setMaterial(Material.GOLD);
+        triangle2.setMaterial(Material.SILVER);
+        final NTorus torus = new NTorus(glProgram.programId);
+//        torus.translate(0, 1.0, 0.0);
         
         camera.translate(0.0, 0.0, -10.0);
         triangle.translate(1, 0, 0);
@@ -65,8 +74,11 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
         gameWorld.add(triangle);
         gameWorld.add(triangle2);
         gameWorld.add(cube);
+        gameWorld.add(torus);
         
         this.positionalLight = new PositionalLight();
+        this.material = Material.GOLD;
+        
         this.mGameState = new GameState(
         	camera,
         	gameWorld
@@ -112,6 +124,8 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	gl.glClearBufferfv(GL4.GL_COLOR, 0, background);
     	
     	drawAxes(glAutoDrawable);
+    	positionalLight.setPosition(new Point3D(5.0f, 2.0f, 2.0f));
+    	setupLights(glAutoDrawable);
     	
     	final int view_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.view_matrix);
     	final int projection_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.projection_matrix);
@@ -129,6 +143,34 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	
     	mGameState.update(1.0);
     	mGameState.render(glAutoDrawable);
+    }
+    
+    
+    public void setupLights(final GLAutoDrawable glAutoDrawable) {
+    	final GL4 gl = (GL4) glAutoDrawable.getGL();
+		final Material currentMaterial = material;
+
+		final Point3D lightP = positionalLight.getPosition();
+		final Point3D lightPv = lightP.mult(mGameState.getCamera().getViewTransform());
+		final float [] currLightPos = new float[] { (float) lightPv.getX(), (float) lightPv.getY(), (float) lightPv.getZ() };
+
+		float [] globalAmbient = new float[] { 0.7f, 0.7f, 0.7f, 1.0f };
+		
+		// set the current globalAmbient settings
+		final int global_ambient_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.global_ambient);
+		gl.glProgramUniform4fv(glProgram.programId, global_ambient_location, 1, globalAmbient, 0);
+	
+		// get the locations of the light and material fields in the shader
+		final int ambient_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.PositionalLight.ambient);
+		final int diffuse_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.PositionalLight.diffuse);
+		final int specular_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.PositionalLight.specular);
+		final int position_location = gl.glGetUniformLocation(glProgram.programId, R.uniforms.PositionalLight.position);
+	
+		//  set the uniform light and material values in the shader
+		gl.glProgramUniform4fv(glProgram.programId, ambient_location, 1, positionalLight.getAmbient(), 0);
+		gl.glProgramUniform4fv(glProgram.programId, diffuse_location, 1, positionalLight.getDiffuse(), 0);
+		gl.glProgramUniform4fv(glProgram.programId, specular_location, 1, positionalLight.getSpecular(), 0);
+		gl.glProgramUniform3fv(glProgram.programId, position_location, 1, currLightPos, 0);
     }
     
     
@@ -165,6 +207,7 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	gl.glVertex3d(0.0, 0.0, 10.0);
     	
     	gl.glEnd();
+    	gl.glDrawArrays(GL4.GL_TRIANGLES, 0, 6);
     }
     
     
@@ -232,7 +275,7 @@ public class GLEventHandler implements GLEventListener, MouseListener, KeyListen
     	if(!this.hasFocus) return;
     	final int keyCode = keyEvent.getKeyCode();
     	final float speed = 0.1f;
-    	final float rotationSpeed = 0.7f;
+    	final float rotationSpeed = -0.7f;
     	float dx = 0.0f;
     	float dy = 0.0f;
     	float dz = 0.0f;

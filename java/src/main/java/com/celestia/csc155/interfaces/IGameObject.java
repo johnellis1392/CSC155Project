@@ -21,4 +21,5 @@ public interface IGameObject {
 	double getY();
 	double getZ();
 	Point3D getPosition();
+	void setMaterial(final Material material);
 }
