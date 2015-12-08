@@ -50,27 +50,84 @@ uniform PositionalLight positional_light;
 uniform Material material;
 
 
+
+
 vec4 midpoint(const vec4 v1, const vec4 v2) {
 	return (v2 + v1) / 2;
 }
 
 
-void main(void) {
-	const vec4 v0 = gl_in[0].gl_Position;
-	const vec4 v1 = gl_in[1].gl_Position;
-	const vec4 v2 = gl_in[2].gl_Position; 
-	const vec4 mid = midpoint(v0, midpoint(v1, v2));
-	const vec4 normal = vec4(cross(v0.xyz, v1.xyz), 1.0);
-	const vec4 lightDirection = mid - vec4(positional_light.position, 1.0);
-	const float lightMagnitude = dot(lightDirection, normal);
+
+vec4 getLighting(const mat4 mv_matrix, 
+				  const vec3[3] vertices,
+				  const PositionalLight positional_light,
+				  const Material material,
+				  const vec3 global_ambient) {
 	
-	for(int i = 0; i < 3; i++) {
-		gl_Position = gl_in[i].gl_Position;
-		EmitVertex();
+	const mat4 normal_matrix = getNormalMatrix(mv_matrix);
+	vec4 center = getCenter(vertices);
+	vec4 P = mv_matrix * center;
+	vec3 N = normalize((normal_matrix * normal).xyz);
+	vec3 L = normalize(positional_light.position - P.xyz);
+	vec3 V = normalize(-P.xyz);
+	vec3 R = reflect(-L, N);
+	
+	const vec3 ambient = 
+		(global_ambient * material.ambient + 
+		 positional_light.ambient * material.ambient).xyz;
+	const vec3 diffuse = 
+		positional_light.diffuse.xyz * 
+		material.diffuse.xyz * 
+		max(dot(N, L), 0.0);
+	const vec3 specular = 
+		pow(max(dot(R, V), 0.0f), material.shininess) * 
+		material.specular.xyz * 
+		positional_light.specular.xyz;
+	
+	return vec4((ambient + diffuse + specular), 1.0);
+}
+
+
+
+void main(void) {
+	vec3[] vertices[gl_in.length];
+	for(int i = 0; i < gl_in.length; i++) {
+		vertices[i] = gl_in[i].gl_Position;
 	}
 	
+	emitVertices(vertices);
+	const vec4 lightMagnitude = getLighting(
+		mv_matrix,
+		vertices,
+		positional_light,
+		material,
+		global_ambient
+	);
+	
 	fLightMagnitude = lightMagnitude;
+	
+	for(int i = 0; i < vertices.length; i++) {
+		gl_Position = vertices[i];
+		EmitVertex();
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
